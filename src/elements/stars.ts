@@ -62,12 +62,12 @@ export class StarField {
     }
 
     // Rendering the star field
-    public render() {
+    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         const gl = this.gl;
         const program = this.program;
         gl.useProgram(program);
-
-        // Perspective and camera matrix
+    
+        // Perspective matrix
         const perspectiveMatrix = mat4.create();
         mat4.perspective(
             perspectiveMatrix,
@@ -76,25 +76,32 @@ export class StarField {
             this.config.zNear,
             this.config.zFar
         );
-
+    
+        // Camera matrix
         const cameraMatrix = mat4.create();
-        mat4.translate(cameraMatrix, cameraMatrix, [0, 0, -2]);
-
+        const cameraPosition = new Float32Array([
+            cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX),
+            cameraDistance * Math.sin(cameraAngleX),
+            cameraDistance * Math.cos(cameraAngleY) * Math.cos(cameraAngleX)
+        ]);
+        
+        mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
+    
         const finalMatrix = mat4.create();
         mat4.multiply(finalMatrix, perspectiveMatrix, cameraMatrix);
-
+    
         // Pass data to shaders
         const matrixLocation = gl.getUniformLocation(program, 'uMatrix');
         gl.uniformMatrix4fv(matrixLocation, false, finalMatrix);
-
+    
         // Bind buffer
         const positionLocation = gl.getAttribLocation(program, 'aPosition');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.enableVertexAttribArray(positionLocation);
         gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
+    
         // Clear and draw
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.drawArrays(gl.POINTS, 0, this.config.numStars);
     }
-}
+}    

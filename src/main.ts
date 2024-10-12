@@ -23,8 +23,39 @@ const starConfig: StarFieldConfig = {
 
 const starField = new StarField(gl, starConfig);
 
+// Camera settings
+let cameraAngleX = 0;
+let cameraAngleY = 0;
+const cameraDistance= 1.5;
+let lastMouseX = 0;
+let lastMouseY = 0;
+let isMouseDown = false;
+
+canvas.addEventListener('mousedown', (event) => {
+    isMouseDown = true;
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
+});
+
+canvas.addEventListener('mouseup', (event) => {
+    isMouseDown = false;
+});
+
+canvas.addEventListener('mousemove', (event) => {
+    if(isMouseDown) {
+        const deltaX = event.clientX - lastMouseX;
+        const deltaY = event.clientY - lastMouseY;
+
+        cameraAngleY += deltaX * 0.01;
+        cameraAngleX -= deltaY * 0.01;
+
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+    }
+});
+
 function animate() {
-    starField.render();
+    starField.render(cameraAngleX, cameraAngleY, cameraDistance);
     requestAnimationFrame(animate);
 }
 
