@@ -24,8 +24,8 @@ export class StarField {
             attribute vec3 aPosition;
             uniform mat4 uMatrix;
             void main(void) {
-                gl_PointSize = 2.0;
-                gl_Position = uMatrix * vec4(aPosition, 1.0);
+                gl_PointSize = 1.2;
+                gl_Position = uMatrix * vec4(aPosition, 0.8);
             }
         `;
 
@@ -43,10 +43,16 @@ export class StarField {
     // Creating a star buffer
     private createStarBuffer(): WebGLBuffer {
         const starPositions: number[] = [];
+        const spawnRadius = 2; 
         for (let i = 0; i < this.config.numStars; i++) {
-            const x = (Math.random() - 0.5) * 2;
-            const y = (Math.random() - 0.5) * 2;
-            const z = (Math.random() - 0.5) * 2;
+            // Generate stars within a larger spherical area
+            const theta = Math.random() * Math.PI; 
+            const phi = Math.random() * 2 * Math.PI; 
+
+            const x = spawnRadius * Math.sin(theta) * Math.cos(phi);
+            const y = spawnRadius * Math.cos(theta);
+            const z = spawnRadius * Math.sin(theta) * Math.sin(phi);
+
             starPositions.push(x, y, z);
         }
 
@@ -57,9 +63,8 @@ export class StarField {
         
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(starPositions), this.gl.STATIC_DRAW);
-
-        return buffer;
-    }
+    return buffer;
+}
 
     // Rendering the star field
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -99,9 +104,6 @@ export class StarField {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.enableVertexAttribArray(positionLocation);
         gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-    
-        // Clear and draw
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.drawArrays(gl.POINTS, 0, this.config.numStars);
     }
 }    
