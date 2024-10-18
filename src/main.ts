@@ -1,5 +1,7 @@
 import { StarField, StarFieldConfig } from "./elements/stars";
 import { Sphere, SphereConfig } from "./elements/sphere";
+import { Sun } from "./elements/sun";
+import { Mercury } from "./planets/mercury";
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl");
@@ -26,21 +28,8 @@ const starConfig: StarFieldConfig = {
 };
 
 const starField = new StarField(gl, starConfig);
-
-// Sun configuration
-const sunConfig: SphereConfig = {
-    radius: 1,
-    latitudeBands: 30,
-    longitudeBands: 30,
-    fieldOfView: 100,
-    aspect: canvas.width / canvas.height,
-    zNear: 0.1,
-    zFar: 100.0,
-    textureUrl: 'http://127.0.0.1:8080/textures/sun_texture.png'
-};
-
-const sun = new Sphere(gl, sunConfig);
-sun.loadTexture('http://127.0.0.1:8080/textures/sun_texture.png');
+const sun = new Sun(gl);
+const mercury = new Mercury(gl);
 
 let cameraAngleX = 0;
 let cameraAngleY = 0;
@@ -83,7 +72,9 @@ canvas.addEventListener('wheel', (event) => {
 function animate() {
     if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        mercury.update();
         sun.render(cameraAngleX, cameraAngleY, cameraDistance);
+        mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
         starField.render(cameraAngleX, cameraAngleY, 1);
     }
     requestAnimationFrame(animate);
