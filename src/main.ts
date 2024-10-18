@@ -22,7 +22,7 @@ const starConfig: StarFieldConfig = {
     fieldOfView: 40,
     aspect: canvas.width / canvas.height,
     zNear: 1,
-    zFar: 10.0
+    zFar: 1000.0
 };
 
 const starField = new StarField(gl, starConfig);
@@ -37,14 +37,16 @@ const sunConfig: SphereConfig = {
     zNear: 0.1,
     zFar: 100.0,
     textureUrl: 'http://127.0.0.1:8080/textures/sun_texture.png'
-}
+};
 
 const sun = new Sphere(gl, sunConfig);
 sun.loadTexture('http://127.0.0.1:8080/textures/sun_texture.png');
 
 let cameraAngleX = 0;
 let cameraAngleY = 0;
-const cameraDistance = 2;
+let cameraDistance = 2; 
+const minCameraDistance = 0.5; 
+const maxCameraDistance = 10.0;
 let lastMouseX = 0;
 let lastMouseY = 0;
 let isMouseDown = false;
@@ -72,11 +74,17 @@ canvas.addEventListener('mousemove', (event) => {
     }
 });
 
+canvas.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    cameraDistance += event.deltaY * 0.001;
+    cameraDistance = Math.max(minCameraDistance, Math.min(maxCameraDistance, cameraDistance));
+});
+
 function animate() {
     if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         sun.render(cameraAngleX, cameraAngleY, cameraDistance);
-        starField.render(cameraAngleX, cameraAngleY, cameraDistance);
+        starField.render(cameraAngleX, cameraAngleY, 1);
     }
     requestAnimationFrame(animate);
 }
