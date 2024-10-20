@@ -55,7 +55,7 @@ export class Sphere {
         this.loadTexture(config.textureUrl)
             .then(texture => {
                 this.texture = texture; 
-                this.render(0, 0, 2);
+                this.render(0, 0, 2); // Initial rendering with default camera position
             })
             .catch(error => {
                 console.error(error);
@@ -152,7 +152,7 @@ export class Sphere {
         return buffer;
     }
 
-    //Function to load a texture
+    // Function to load a texture
     public loadTexture(url: string): Promise<WebGLTexture> {
         const texture = this.gl.createTexture();
         if (!texture) {
@@ -189,8 +189,7 @@ export class Sphere {
         });
     }
     
-
-    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
+    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number = 0, y: number = 0, z: number = 0) {
         const gl = this.gl;
         const program = this.program; 
         gl.useProgram(program);
@@ -215,9 +214,13 @@ export class Sphere {
     
         const finalMatrix = mat4.create();
         mat4.multiply(finalMatrix, perspectiveMatrix, cameraMatrix);
+
+        // Apply translation to the sphere based on its position
+        const translationMatrix = mat4.create();
+        mat4.translate(translationMatrix, finalMatrix, [x, y, z]);
     
         const matrixLocation = gl.getUniformLocation(program, 'uMatrix');
-        gl.uniformMatrix4fv(matrixLocation, false, finalMatrix);
+        gl.uniformMatrix4fv(matrixLocation, false, translationMatrix);
     
         const positionLocation = gl.getAttribLocation(program, 'aPosition');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
