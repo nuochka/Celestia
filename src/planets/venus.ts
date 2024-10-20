@@ -6,7 +6,7 @@ export class Venus {
     private sphere: Sphere;
 
     // Venus orbit parameters
-    private venusOrbitRadius: number = 4.0;
+    private venusOrbitRadius: number = 4.5;
     private venusAngle: number = 0;          
     private venusOrbitSpeed: number = 0.005;
 

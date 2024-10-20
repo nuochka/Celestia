@@ -6,7 +6,7 @@ export class Earth {
     private sphere: Sphere;
 
     // Earth orbit parameters
-    private earthOrbitRadius: number = 5.0; 
+    private earthOrbitRadius: number = 6.5; 
     private earthAngle: number = 0;
     private earthOrbitSpeed: number = 0.0027;
 
