@@ -1,7 +1,7 @@
 import { StarField, StarFieldConfig } from "./elements/stars";
-import { Sphere, SphereConfig } from "./elements/sphere";
 import { Sun } from "./elements/sun";
 import { Mercury } from "./planets/mercury";
+import { Venus } from "./planets/venus";
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl");
@@ -30,6 +30,7 @@ const starConfig: StarFieldConfig = {
 const starField = new StarField(gl, starConfig);
 const sun = new Sun(gl);
 const mercury = new Mercury(gl);
+const venus = new Venus(gl);
 
 let cameraAngleX = 0;
 let cameraAngleY = 0;
@@ -73,8 +74,10 @@ function animate() {
     if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         mercury.update();
+        venus.update();
         sun.render(cameraAngleX, cameraAngleY, cameraDistance);
         mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
+        venus.render(cameraAngleX, cameraAngleY, cameraDistance);
         starField.render(cameraAngleX, cameraAngleY, 1);
     }
     requestAnimationFrame(animate);
