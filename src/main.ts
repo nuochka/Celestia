@@ -5,6 +5,7 @@ import { Venus } from "./planets/venus";
 import { Earth } from "./planets/earth";
 import { Mars } from "./planets/mars";
 import { Jupiter } from "./planets/jupiter";
+import { Saturn } from "./planets/saturn";
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl");
@@ -37,11 +38,12 @@ const venus = new Venus(gl);
 const earth = new Earth(gl);
 const mars = new Mars(gl);
 const jupiter = new Jupiter(gl);
+const saturn = new Saturn(gl);
 
 let cameraAngleX = 0;
 let cameraAngleY = 0;
-let cameraDistance = 2; 
-const minCameraDistance = 0.5; 
+let cameraDistance = 2;
+const minCameraDistance = 0.5;
 const maxCameraDistance = 10.0;
 let lastMouseX = 0;
 let lastMouseY = 0;
@@ -79,17 +81,21 @@ canvas.addEventListener('wheel', (event) => {
 function animate() {
     if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        
         mercury.update();
         venus.update();
         earth.update();
         mars.update();
         jupiter.update();
+        saturn.update(); 
+
         sun.render(cameraAngleX, cameraAngleY, cameraDistance);
         mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
         venus.render(cameraAngleX, cameraAngleY, cameraDistance);
         earth.render(cameraAngleX, cameraAngleY, cameraDistance);
         mars.render(cameraAngleX, cameraAngleY, cameraDistance);
         jupiter.render(cameraAngleX, cameraAngleY, cameraDistance);
+        saturn.render(cameraAngleX, cameraAngleY, cameraDistance);
         starField.render(cameraAngleX, cameraAngleY, 1);
     }
     requestAnimationFrame(animate);
