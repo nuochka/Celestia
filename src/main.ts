@@ -6,6 +6,9 @@ import { Earth } from "./planets/earth";
 import { Mars } from "./planets/mars";
 import { Jupiter } from "./planets/jupiter";
 import { Saturn } from "./planets/saturn";
+import { Uranus } from "./planets/uranus";
+import { Neptune } from "./planets/neptune";
+import { Pluto } from "./planets/pluto";
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl");
@@ -39,6 +42,9 @@ const earth = new Earth(gl);
 const mars = new Mars(gl);
 const jupiter = new Jupiter(gl);
 const saturn = new Saturn(gl);
+const uranus = new Uranus(gl);
+const neptune = new Neptune(gl);
+const pluto = new Pluto(gl);
 
 let cameraAngleX = 0;
 let cameraAngleY = 0;
@@ -88,6 +94,9 @@ function animate() {
         mars.update();
         jupiter.update();
         saturn.update(); 
+        uranus.update();
+        neptune.update();
+        pluto.update();
 
         sun.render(cameraAngleX, cameraAngleY, cameraDistance);
         mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
@@ -96,6 +105,9 @@ function animate() {
         mars.render(cameraAngleX, cameraAngleY, cameraDistance);
         jupiter.render(cameraAngleX, cameraAngleY, cameraDistance);
         saturn.render(cameraAngleX, cameraAngleY, cameraDistance);
+        uranus.render(cameraAngleX, cameraAngleY, cameraDistance);
+        neptune.render(cameraAngleX, cameraAngleY, cameraDistance);
+        pluto.render(cameraAngleX, cameraAngleY, cameraDistance);
         starField.render(cameraAngleX, cameraAngleY, 1);
     }
     requestAnimationFrame(animate);
