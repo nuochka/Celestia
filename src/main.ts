@@ -87,6 +87,9 @@ canvas.addEventListener('wheel', (event) => {
 function animate() {
     if (gl) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthMask(false);
+        starField.render(cameraAngleX, cameraAngleY, 1);
         
         mercury.update();
         venus.update();
@@ -98,6 +101,8 @@ function animate() {
         neptune.update();
         pluto.update();
 
+        gl.clear(gl.DEPTH_BUFFER_BIT);
+        gl.depthMask(true);
         sun.render(cameraAngleX, cameraAngleY, cameraDistance);
         mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
         venus.render(cameraAngleX, cameraAngleY, cameraDistance);
@@ -108,7 +113,6 @@ function animate() {
         uranus.render(cameraAngleX, cameraAngleY, cameraDistance);
         neptune.render(cameraAngleX, cameraAngleY, cameraDistance);
         pluto.render(cameraAngleX, cameraAngleY, cameraDistance);
-        starField.render(cameraAngleX, cameraAngleY, 1);
     }
     requestAnimationFrame(animate);
 }
