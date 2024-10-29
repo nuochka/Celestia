@@ -1,14 +1,7 @@
-import { Sphere, SphereConfig } from "../elements/sphere";
-import { mat4 } from 'gl-matrix';
+import { Planet } from "../elements/planet";
+import { SphereConfig } from "../elements/sphere";
 
-export class Mars {
-    private gl: WebGLRenderingContext;
-    private sphere: Sphere;
-
-    // Mars orbit parameters
-    private marsOrbitRadius: number = 8.5;  
-    private marsAngle: number = 0;
-    private marsOrbitSpeed: number = 0.0019; 
+export class Mars extends Planet{
 
     constructor(gl: WebGLRenderingContext) {
         const marsConfig: SphereConfig = {
@@ -21,24 +14,6 @@ export class Mars {
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/mars_texture.jpg'
         };
-
-        this.gl = gl;
-        this.sphere = new Sphere(gl, marsConfig);
-        this.sphere.loadTexture(marsConfig.textureUrl);
-    }
-
-    public update() {
-        this.marsAngle += this.marsOrbitSpeed;
-        if (this.marsAngle >= 2 * Math.PI) {
-            this.marsAngle -= 2 * Math.PI;
-        }
-    }
-
-    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
-        const marsX = this.marsOrbitRadius * Math.cos(this.marsAngle);
-        const marsY = 0;
-        const marsZ = this.marsOrbitRadius * Math.sin(this.marsAngle);
-
-        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, marsX, marsY, marsZ);
+        super(gl, marsConfig, 8.5, 0.0019);
     }
 }

@@ -1,15 +1,7 @@
-import { Sphere, SphereConfig } from "../elements/sphere";
-import { mat4 } from 'gl-matrix';
+import { Planet } from "../elements/planet";
+import { SphereConfig } from "../elements/sphere";
 
-export class Mercury {
-    private gl: WebGLRenderingContext;
-    private sphere: Sphere;
-
-    // Mercury orbit parameters
-    private mercuryOrbitRadius: number = 2.5; 
-    private mercuryAngle: number = 0;         
-    private mercuryOrbitSpeed: number = 0.01;
-
+export class Mercury extends Planet {
     constructor(gl: WebGLRenderingContext) {
         const mercuryConfig: SphereConfig = {
             radius: 0.3,
@@ -21,25 +13,6 @@ export class Mercury {
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/mercury_texture.jpg'
         };
-
-        this.gl = gl;
-        this.sphere = new Sphere(gl, mercuryConfig);
-        this.sphere.loadTexture(mercuryConfig.textureUrl);
+        super(gl, mercuryConfig, 2.5, 0.01);
     }
-
-    public update() {
-        this.mercuryAngle += this.mercuryOrbitSpeed;
-        if (this.mercuryAngle >= 2 * Math.PI) {
-            this.mercuryAngle -= 2 * Math.PI;
-        }
-    }
-
-    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
-        const mercuryX = this.mercuryOrbitRadius * Math.cos(this.mercuryAngle);
-        const mercuryY = 0;
-        const mercuryZ = this.mercuryOrbitRadius * Math.sin(this.mercuryAngle);
-
-        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, mercuryX, mercuryY, mercuryZ);
-    }
-    
 }
