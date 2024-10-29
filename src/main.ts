@@ -1,4 +1,5 @@
 import { StarField, StarFieldConfig } from "./elements/stars";
+import { GridField, SubgridField, GridFieldConfig, SubgridFieldConfig } from "./elements/gridfield";
 import { Sun } from "./elements/sun";
 import { Mercury } from "./planets/mercury";
 import { Venus } from "./planets/venus";
@@ -9,6 +10,7 @@ import { Saturn } from "./planets/saturn";
 import { Uranus } from "./planets/uranus";
 import { Neptune } from "./planets/neptune";
 import { Pluto } from "./planets/pluto";
+
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl");
@@ -34,6 +36,28 @@ const starConfig: StarFieldConfig = {
     zFar: 1000.0
 };
 
+const gridFieldConfig: GridFieldConfig = {
+    size: 10, 
+    gridColor:[0.5, 0.5, 0.5, 0.7],
+    fieldOfView: 45,
+    aspect: canvas.width / canvas.height,
+    zNear: 0.1,
+    zFar: 1000,
+};
+
+const subgridConfig: SubgridFieldConfig = {
+    size: 100,                 
+    gridColor: [0.5, 0.5, 0.5, 1],  
+    subgridColor: [0.8, 0.8, 0.8, 0.0], 
+    fieldOfView: 45,
+    aspect: canvas.width / canvas.height,
+    zNear: 0.1,
+    zFar: 100,
+    subgridSize: 10, 
+};
+
+const gridField = new GridField(gl, gridFieldConfig);
+const subgridField = new SubgridField(gl, subgridConfig);
 const starField = new StarField(gl, starConfig);
 const sun = new Sun(gl);
 const mercury = new Mercury(gl);
@@ -113,6 +137,8 @@ function animate() {
         uranus.render(cameraAngleX, cameraAngleY, cameraDistance);
         neptune.render(cameraAngleX, cameraAngleY, cameraDistance);
         pluto.render(cameraAngleX, cameraAngleY, cameraDistance);
+        gridField.render(cameraAngleX, cameraAngleY);
+        subgridField.render(cameraAngleX, cameraAngleY);
     }
     requestAnimationFrame(animate);
 }
