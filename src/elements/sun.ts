@@ -6,9 +6,9 @@ export class Sun {
 
     constructor(gl: WebGLRenderingContext) {
         const sunConfig: SphereConfig = {
-            radius: 1,
-            latitudeBands: 30,
-            longitudeBands: 30,
+            radius: 3.0,
+            latitudeBands: 40,
+            longitudeBands: 40,
             fieldOfView: 100,
             aspect: window.innerWidth / window.innerHeight,
             zNear: 0.1,
