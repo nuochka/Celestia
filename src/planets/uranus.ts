@@ -14,6 +14,6 @@ export class Uranus extends Planet{
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/uranus_texture.png'
         };
-        super(gl, uranusConfig, 20.5, 0.0004);
+        super(gl, uranusConfig, 40.0, 0.0004);
     }
 }
