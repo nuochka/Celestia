@@ -4,14 +4,17 @@ export abstract class Planet {
     protected gl: WebGLRenderingContext;
     protected sphere: Sphere;
 
-    protected orbitRadius: number; 
-    protected angle: number = 0;         
-    protected orbitSpeed: number; 
+    protected orbitRadius: number;
+    protected angle: number = 0;          
+    protected orbitSpeed: number;
 
-    constructor(gl: WebGLRenderingContext, config: SphereConfig, orbitRadius: number, orbitSpeed: number) {
+    protected rotationAngle: number = 0;  
+    protected rotationSpeed: number;      
+    constructor(gl: WebGLRenderingContext, config: SphereConfig, orbitRadius: number, orbitSpeed: number, rotationSpeed: number) {
         this.gl = gl;
         this.orbitRadius = orbitRadius;
         this.orbitSpeed = orbitSpeed;
+        this.rotationSpeed = rotationSpeed;
 
         this.sphere = new Sphere(gl, config);
         this.sphere.loadTexture(config.textureUrl);
@@ -22,6 +25,11 @@ export abstract class Planet {
         if (this.angle >= 2 * Math.PI) {
             this.angle -= 2 * Math.PI;
         }
+        // Update the planet's own rotation angle
+        this.rotationAngle += this.rotationSpeed;
+        if (this.rotationAngle >= 2 * Math.PI) {
+            this.rotationAngle -= 2 * Math.PI;
+        }
     }
 
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -29,6 +37,6 @@ export abstract class Planet {
         const y = 0;
         const z = this.orbitRadius * Math.sin(this.angle);
 
-        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z);
+        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.rotationAngle);
     }
 }

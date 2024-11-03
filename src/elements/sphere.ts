@@ -189,7 +189,7 @@ export class Sphere {
         });
     }
     
-    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number = 0, y: number = 0, z: number = 0) {
+    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number = 0, y: number = 0, z: number = 0, rotationAngle: number = 0) {
         const gl = this.gl;
         const program = this.program; 
         gl.useProgram(program);
@@ -214,10 +214,13 @@ export class Sphere {
     
         const finalMatrix = mat4.create();
         mat4.multiply(finalMatrix, perspectiveMatrix, cameraMatrix);
-
-        // Apply translation to the sphere based on its position
+    
+        const rotationMatrix = mat4.create();
+        mat4.rotateY(rotationMatrix, rotationMatrix, rotationAngle);
+    
         const translationMatrix = mat4.create();
-        mat4.translate(translationMatrix, finalMatrix, [x, y, z]);
+        mat4.multiply(translationMatrix, finalMatrix, rotationMatrix);
+        mat4.translate(translationMatrix, translationMatrix, [x, y, z]);
     
         const matrixLocation = gl.getUniformLocation(program, 'uMatrix');
         gl.uniformMatrix4fv(matrixLocation, false, translationMatrix);
@@ -226,7 +229,7 @@ export class Sphere {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         gl.enableVertexAttribArray(positionLocation); 
         gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0); 
-
+    
         const texCoordLocation = gl.getAttribLocation(program, 'aTexCoord');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
         gl.enableVertexAttribArray(texCoordLocation);
@@ -243,5 +246,5 @@ export class Sphere {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         const vertexCount = (this.config.latitudeBands) * (this.config.longitudeBands) * 6; 
         gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_SHORT, 0); 
-    }
+    }    
 }
