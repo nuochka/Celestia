@@ -13,6 +13,6 @@ export class Pluto extends Planet {
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/pluto_texture.jpg'
         };
-        super(gl, plutoConfig, 60.0, 0.0005);
+        super(gl, plutoConfig, 60.0, -0.0002, 0.00001);
     }
 }

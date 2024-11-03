@@ -14,6 +14,6 @@ export class Neptune extends Planet{
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/neptune_texture.jpg'
         };
-        super(gl, neptuneConfig, 50.0, 0.0008);
+        super(gl, neptuneConfig, 50.0, -0.00008, 0.0005);
     }
 }
