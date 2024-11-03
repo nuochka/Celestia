@@ -74,7 +74,7 @@ let cameraAngleX = 0;
 let cameraAngleY = 0;
 let cameraDistance = 2;
 const minCameraDistance = 0.5;
-const maxCameraDistance = 10.0;
+const maxCameraDistance = 20.0;
 let lastMouseX = 0;
 let lastMouseY = 0;
 let isMouseDown = false;
@@ -114,7 +114,7 @@ function animate() {
         gl.enable(gl.DEPTH_TEST);
         gl.depthMask(false);
         starField.render(cameraAngleX, cameraAngleY, 1);
-        
+        sun.update();
         mercury.update();
         venus.update();
         earth.update();
