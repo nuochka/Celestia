@@ -14,8 +14,8 @@ export interface SphereConfig {
 
 export class Sphere {
     private gl: WebGLRenderingContext;  
-    private config: SphereConfig;        
-    private program: WebGLProgram;       
+    public config: SphereConfig;        
+    public program: WebGLProgram;       
     private positionBuffer: WebGLBuffer; 
     private indexBuffer: WebGLBuffer; 
     private texCoordBuffer: WebGLBuffer; 
