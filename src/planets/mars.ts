@@ -14,6 +14,6 @@ export class Mars extends Planet{
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/mars_texture.jpg'
         };
-        super(gl, marsConfig, 10.0, 0.0019, 0.005);
+        super(gl, marsConfig, 10.0, 0.0019, 0.005, [0.8, 0.8, 0.6, 1.0]);
     }
 }

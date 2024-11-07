@@ -14,7 +14,7 @@ export class Sun extends Planet {
             textureUrl: 'http://127.0.0.1:8080/textures/sun_texture.png'
         };
 
-        super(gl, sunConfig, 0, 0, 0.001);
+        super(gl, sunConfig, 0, 0, 0.001, [0,0,0,0]);
     }
 
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {

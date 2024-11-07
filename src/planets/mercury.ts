@@ -13,6 +13,6 @@ export class Mercury extends Planet {
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/mercury_texture.jpg'
         };
-        super(gl, mercuryConfig, 4.0, -0.01, 0.005);
+        super(gl, mercuryConfig, 4.0, -0.01, 0.005, [0.8, 0.8, 0.6, 1.0]);
     }
 }
