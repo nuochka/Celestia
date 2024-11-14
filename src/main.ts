@@ -37,7 +37,7 @@ const starConfig: StarFieldConfig = {
 };
 
 const gridFieldConfig: GridFieldConfig = {
-    size: 10, 
+    size: 100, 
     gridColor:[0.5, 0.5, 0.5, 0.7],
     fieldOfView: 45,
     aspect: canvas.width / canvas.height,
@@ -46,7 +46,7 @@ const gridFieldConfig: GridFieldConfig = {
 };
 
 const subgridConfig: SubgridFieldConfig = {
-    size: 100,                 
+    size: 500,                 
     gridColor: [0.5, 0.5, 0.5, 1],  
     subgridColor: [0.8, 0.8, 0.8, 0.0], 
     fieldOfView: 45,
@@ -73,8 +73,8 @@ const pluto = new Pluto(gl);
 let cameraAngleX = 0;
 let cameraAngleY = 0;
 let cameraDistance = 2;
-const minCameraDistance = 0.5;
-const maxCameraDistance = 20.0;
+const minCameraDistance = 1.0;
+const maxCameraDistance = 50.0;
 let lastMouseX = 0;
 let lastMouseY = 0;
 let isMouseDown = false;
