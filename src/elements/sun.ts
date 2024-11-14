@@ -14,13 +14,17 @@ export class Sun extends Planet {
             textureUrl: 'http://127.0.0.1:8080/textures/sun_texture.png'
         };
 
-        super(gl, sunConfig, 0, 0, 0.001, [0,0,0,0]);
+        super(gl, sunConfig, 0, 0, 0, [0, 0, 0, 0]);
     }
 
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
-        const x = 0; 
-        const y = 0; 
-        const z = 0; 
-        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.rotationAngle);
+        const x = 0;
+        const y = 0;
+        const z = 0;
+
+        const lightDirection = new Float32Array([1, 1, 1]);
+        const emissiveColor = new Float32Array([1.0, 1.0, 1.0]); 
+
+        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, 0, 0, lightDirection, true, emissiveColor);
     }
 }

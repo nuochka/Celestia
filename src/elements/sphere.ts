@@ -13,7 +13,7 @@ export interface SphereConfig {
 }
 
 export class Sphere {
-    private gl: WebGLRenderingContext;  
+    public gl: WebGLRenderingContext;  
     public config: SphereConfig;        
     public program: WebGLProgram;       
     private positionBuffer: WebGLBuffer; 
@@ -29,20 +29,41 @@ export class Sphere {
         const vertexShaderSource = `
             attribute vec3 aPosition;
             attribute vec2 aTexCoord;
+            attribute vec3 aNormal;
             varying vec2 vTexCoord;
-            uniform mat4 uMatrix;     
+            varying vec3 vNormal; 
+            uniform mat4 uMatrix;
             void main(void) {
                 gl_Position = uMatrix * vec4(aPosition, 1.0); 
-                vTexCoord = aTexCoord; // Pass texture coordinates to fragment shader
+                vTexCoord = aTexCoord;
+                vNormal = aNormal;
             }
+
         `;
 
         const fragmentShaderSource = `
-            precision mediump float; 
-            varying vec2 vTexCoord; 
-            uniform sampler2D uSampler; 
+            precision mediump float;
+            varying vec2 vTexCoord;
+            varying vec3 vNormal;
+
+            uniform sampler2D uSampler;
+            uniform vec3 uLightDirection;
+            uniform vec3 uAmbientLight;
+
             void main(void) {
-                gl_FragColor = texture2D(uSampler, vTexCoord);
+                // Normalization noraml and light direction
+                vec3 normal = normalize(vNormal);
+                vec3 lightDir = normalize(uLightDirection);
+
+                // Diffuse lighting (illumination depends on the angle between the normal and the direction of light)
+                float diff = max(dot(normal, lightDir), 0.0);
+
+                // Ambient light 
+                vec4 textureColor = texture2D(uSampler, vTexCoord);
+                vec3 ambient = uAmbientLight * textureColor.rgb;
+                vec3 diffuse = diff * textureColor.rgb;
+
+                gl_FragColor = vec4(ambient + diffuse, textureColor.a);
             }
         `;
 
@@ -55,7 +76,6 @@ export class Sphere {
         this.loadTexture(config.textureUrl)
             .then(texture => {
                 this.texture = texture; 
-                this.render(0, 0, 2); // Initial rendering with default camera position
             })
             .catch(error => {
                 console.error(error);
@@ -65,34 +85,34 @@ export class Sphere {
     // Create a buffer for sphere vertices
     private createSphereBuffer(): WebGLBuffer {
         const positions: number[] = []; 
+        const normals: number[] = []; // Normals for each vertex
         const { radius, latitudeBands, longitudeBands } = this.config; 
 
         for (let lat = 0; lat <= latitudeBands; lat++) {
             const theta = (lat * Math.PI) / latitudeBands;
             const sinTheta = Math.sin(theta);
             const cosTheta = Math.cos(theta);
-
             for (let lon = 0; lon <= longitudeBands; lon++) {
                 const phi = (lon * 2 * Math.PI) / longitudeBands; 
                 const sinPhi = Math.sin(phi);
                 const cosPhi = Math.cos(phi);
-                
+
                 const x = radius * cosPhi * sinTheta; 
                 const y = radius * cosTheta;           
                 const z = radius * sinPhi * sinTheta; 
-
+                // Normal for each vertex - normalized vector from center of sphere
+                const length = Math.sqrt(x * x + y * y + z * z);
+                normals.push(x / length, y / length, z / length); // Normalized normal coordinates
+                
                 positions.push(x, y, z);
             }
         }
-
         const buffer = this.gl.createBuffer();
         if (!buffer) {
             throw new Error('Failed to create WebGLBuffer');
         }
-
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(positions), this.gl.STATIC_DRAW);
-
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array([...positions, ...normals]), this.gl.STATIC_DRAW);
         return buffer;
     }
 
@@ -124,35 +144,28 @@ export class Sphere {
     private createIndexBuffer(): WebGLBuffer {
         const indices: number[] = [];
         const { latitudeBands, longitudeBands } = this.config;
-
+     
         for (let lat = 0; lat < latitudeBands; lat++) {
             for (let lon = 0; lon < longitudeBands; lon++) {
-                const first = (lat * (longitudeBands + 1)) + lon;
+                const first = lat * (longitudeBands + 1) + lon;
                 const second = first + longitudeBands + 1;
-
-                // Create two triangles for each quad
-                indices.push(first);
-                indices.push(second);
-                indices.push(first + 1);
-
-                indices.push(second);
-                indices.push(second + 1);
-                indices.push(first + 1);
+                indices.push(first, second, first + 1);
+                indices.push(second, second + 1, first + 1);
             }
         }
-
+     
         const buffer = this.gl.createBuffer();
         if (!buffer) {
-            throw new Error('Failed to create WebGLBuffer for indices');
+            throw new Error('Failed to create WebGLBuffer');
         }
-
+     
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, buffer);
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), this.gl.STATIC_DRAW);
-
+     
         return buffer;
     }
 
-    // Function to load a texture
+
     public loadTexture(url: string): Promise<WebGLTexture> {
         const texture = this.gl.createTexture();
         if (!texture) {
@@ -188,63 +201,96 @@ export class Sphere {
             };
         });
     }
+
+    public render(
+        cameraAngleX: number, 
+        cameraAngleY: number, 
+        cameraDistance: number, 
+        x: number, 
+        y: number, 
+        z: number, 
+        rotationAngle: number = 0, 
+        orbitalSpeed: number = 0, 
+        lightDirection: Float32Array, 
+        isSun: boolean, 
+        emissiveColor: Float32Array // New parameter for emissive color
+    ) {
+        if (!this.texture) return;
     
-    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number = 0, y: number = 0, z: number = 0, rotationAngle: number = 0) {
         const gl = this.gl;
-        const program = this.program; 
+        const program = this.program;
         gl.useProgram(program);
     
         const perspectiveMatrix = mat4.create();
         mat4.perspective(
             perspectiveMatrix,
-            (this.config.fieldOfView * Math.PI) / 180, 
-            this.config.aspect,                         
-            this.config.zNear,                         
-            this.config.zFar                            
+            (this.config.fieldOfView * Math.PI) / 180,
+            this.config.aspect,
+            this.config.zNear,
+            this.config.zFar
         );
     
         const cameraMatrix = mat4.create();
         const cameraPosition = new Float32Array([
-            cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX), 
-            cameraDistance * Math.sin(cameraAngleX),                          
-            cameraDistance * Math.cos(cameraAngleY) * Math.cos(cameraAngleX) 
+            cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX),
+            cameraDistance * Math.sin(cameraAngleX),
+            cameraDistance * Math.cos(cameraAngleY) * Math.cos(cameraAngleX)
         ]);
     
         mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
+        mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
+        const objectMatrix = mat4.create();
     
-        const finalMatrix = mat4.create();
-        mat4.multiply(finalMatrix, perspectiveMatrix, cameraMatrix);
+        if (!isSun) {
+            mat4.rotateY(objectMatrix, objectMatrix, rotationAngle);
+            mat4.rotateY(objectMatrix, objectMatrix, orbitalSpeed);
+            mat4.translate(objectMatrix, objectMatrix, [x, y, z]);
+        }
+        mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
     
-        const rotationMatrix = mat4.create();
-        mat4.rotateY(rotationMatrix, rotationMatrix, rotationAngle);
+        // Directional light for planets
+        const lightDirectionVec = new Float32Array([0, 0, 0]);
+        lightDirectionVec[0] = -x;
+        lightDirectionVec[1] = -y;
+        lightDirectionVec[2] = -z;
     
-        const translationMatrix = mat4.create();
-        mat4.multiply(translationMatrix, finalMatrix, rotationMatrix);
-        mat4.translate(translationMatrix, translationMatrix, [x, y, z]);
+        const uMatrixLocation = this.gl.getUniformLocation(this.program, "uMatrix");
+        const uLightDirectionLocation = this.gl.getUniformLocation(this.program, "uLightDirection");
+        const uAmbientLightLocation = this.gl.getUniformLocation(this.program, "uAmbientLight");
+        const uEmissiveColorLocation = this.gl.getUniformLocation(this.program, "uEmissiveColor");
     
-        const matrixLocation = gl.getUniformLocation(program, 'uMatrix');
-        gl.uniformMatrix4fv(matrixLocation, false, translationMatrix);
-    
-        const positionLocation = gl.getAttribLocation(program, 'aPosition');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
-        gl.enableVertexAttribArray(positionLocation); 
-        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0); 
-    
-        const texCoordLocation = gl.getAttribLocation(program, 'aTexCoord');
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
-        gl.enableVertexAttribArray(texCoordLocation);
-        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0); 
-    
-        const textureLocation = gl.getUniformLocation(program, 'uSampler');
-        gl.activeTexture(gl.TEXTURE0);
+        this.gl.uniformMatrix4fv(uMatrixLocation, false, perspectiveMatrix);
+        this.gl.uniform3fv(uLightDirectionLocation, lightDirectionVec);
+        this.gl.uniform3fv(uAmbientLightLocation, isSun ? [0.3, 0.3, 0.3] : [0.1, 0.1, 0.1]);
         
-        if (this.texture) { 
-            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        // If it's the Sun, set the emissive color to make it glow
+        if (isSun) {
+            this.gl.uniform3fv(uEmissiveColorLocation, emissiveColor);
         }
     
-        gl.uniform1i(textureLocation, 0); 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        const vertexCount = (this.config.latitudeBands) * (this.config.longitudeBands) * 6; 
-        gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_SHORT, 0); 
-    }    
+        // Enable attributes for position, normal, and texture coordinates
+        const aPositionLocation = this.gl.getAttribLocation(this.program, "aPosition");
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+        this.gl.vertexAttribPointer(aPositionLocation, 3, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(aPositionLocation);
+    
+        const aNormalLocation = this.gl.getAttribLocation(this.program, "aNormal");
+        this.gl.vertexAttribPointer(aNormalLocation, 3, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(aNormalLocation);
+    
+        const aTexCoordLocation = this.gl.getAttribLocation(this.program, "aTexCoord");
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texCoordBuffer);
+        this.gl.vertexAttribPointer(aTexCoordLocation, 2, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(aTexCoordLocation);
+    
+        // Bind the texture and set the uniform
+        this.gl.activeTexture(this.gl.TEXTURE0);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
+        const uSamplerLocation = this.gl.getUniformLocation(this.program, "uSampler");
+        this.gl.uniform1i(uSamplerLocation, 0);
+    
+        // Draw the sphere
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+        this.gl.drawElements(this.gl.TRIANGLES, 6 * this.config.latitudeBands * this.config.longitudeBands, this.gl.UNSIGNED_SHORT, 0);
+    }       
 }

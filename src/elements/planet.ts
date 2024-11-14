@@ -4,7 +4,7 @@ import { OrbitField } from "./orbit";
 export abstract class Planet {
     protected gl: WebGLRenderingContext;
     protected sphere: Sphere;
-    protected orbit: OrbitField; 
+    protected orbit: OrbitField;
 
     protected orbitRadius: number;
     protected angle: number = 0;
@@ -48,6 +48,19 @@ export abstract class Planet {
         const x = this.orbitRadius * Math.cos(this.angle);
         const y = 0;
         const z = this.orbitRadius * Math.sin(this.angle);
-        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.rotationAngle);
+    
+        // Calculate light direction from Sun to Planet
+        const lightDirection = new Float32Array([x - 0, y - 0, z - 0]);
+    
+        // Normalize light direction vector
+        const length = Math.sqrt(lightDirection[0] * lightDirection[0] +
+            lightDirection[1] * lightDirection[1] +
+            lightDirection[2] * lightDirection[2]);
+        lightDirection[0] /= length;
+        lightDirection[1] /= length;
+        lightDirection[2] /= length;
+
+
+        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.rotationAngle, this.orbitSpeed, lightDirection, false);
     }
 }
