@@ -16,15 +16,16 @@ export class Sun extends Planet {
 
         super(gl, sunConfig, 0, 0, 0, [0, 0, 0, 0]);
     }
-
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         const x = 0;
         const y = 0;
         const z = 0;
-
-        const lightDirection = new Float32Array([1, 1, 1]);
-        const emissiveColor = new Float32Array([1.0, 1.0, 1.0]); 
-
-        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, 0, 0, lightDirection, true, emissiveColor);
+    
+        // For the sun, we set the light direction to be a fixed vector (Sun emits light in all directions)
+        const lightDirection = new Float32Array([1.0, 1.0, 1.0]); // Sun light direction
+        
+        // Pass the light direction and make sure the Sun emits more light by adjusting the ambient light
+        this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, 0, 0, lightDirection, true);
     }
+    
 }

@@ -51,14 +51,9 @@ export class Sphere {
             uniform vec3 uAmbientLight;
 
             void main(void) {
-                // Normalization noraml and light direction
                 vec3 normal = normalize(vNormal);
                 vec3 lightDir = normalize(uLightDirection);
-
-                // Diffuse lighting (illumination depends on the angle between the normal and the direction of light)
                 float diff = max(dot(normal, lightDir), 0.0);
-
-                // Ambient light 
                 vec4 textureColor = texture2D(uSampler, vTexCoord);
                 vec3 ambient = uAmbientLight * textureColor.rgb;
                 vec3 diffuse = diff * textureColor.rgb;
@@ -202,19 +197,7 @@ export class Sphere {
         });
     }
 
-    public render(
-        cameraAngleX: number, 
-        cameraAngleY: number, 
-        cameraDistance: number, 
-        x: number, 
-        y: number, 
-        z: number, 
-        rotationAngle: number = 0, 
-        orbitalSpeed: number = 0, 
-        lightDirection: Float32Array, 
-        isSun: boolean, 
-        emissiveColor: Float32Array // New parameter for emissive color
-    ) {
+    public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number, y: number, z: number, rotationAngle: number = 0, orbitalSpeed: number = 0, lightDirection: Float32Array, isSun: boolean) {
         if (!this.texture) return;
     
         const gl = this.gl;
@@ -224,23 +207,23 @@ export class Sphere {
         const perspectiveMatrix = mat4.create();
         mat4.perspective(
             perspectiveMatrix,
-            (this.config.fieldOfView * Math.PI) / 180,
-            this.config.aspect,
-            this.config.zNear,
-            this.config.zFar
+            (this.config.fieldOfView * Math.PI) / 180, 
+            this.config.aspect,                         
+            this.config.zNear,                         
+            this.config.zFar                            
         );
     
         const cameraMatrix = mat4.create();
         const cameraPosition = new Float32Array([
-            cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX),
-            cameraDistance * Math.sin(cameraAngleX),
-            cameraDistance * Math.cos(cameraAngleY) * Math.cos(cameraAngleX)
+            cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX), 
+            cameraDistance * Math.sin(cameraAngleX),                          
+            cameraDistance * Math.cos(cameraAngleY) * Math.cos(cameraAngleX) 
         ]);
-    
+        
         mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
         const objectMatrix = mat4.create();
-    
+        
         if (!isSun) {
             mat4.rotateY(objectMatrix, objectMatrix, rotationAngle);
             mat4.rotateY(objectMatrix, objectMatrix, orbitalSpeed);
@@ -248,8 +231,7 @@ export class Sphere {
         }
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
     
-        // Directional light for planets
-        const lightDirectionVec = new Float32Array([0, 0, 0]);
+        const lightDirectionVec = new Float32Array([0, 0, 0]); 
         lightDirectionVec[0] = -x;
         lightDirectionVec[1] = -y;
         lightDirectionVec[2] = -z;
@@ -257,18 +239,12 @@ export class Sphere {
         const uMatrixLocation = this.gl.getUniformLocation(this.program, "uMatrix");
         const uLightDirectionLocation = this.gl.getUniformLocation(this.program, "uLightDirection");
         const uAmbientLightLocation = this.gl.getUniformLocation(this.program, "uAmbientLight");
-        const uEmissiveColorLocation = this.gl.getUniformLocation(this.program, "uEmissiveColor");
     
         this.gl.uniformMatrix4fv(uMatrixLocation, false, perspectiveMatrix);
         this.gl.uniform3fv(uLightDirectionLocation, lightDirectionVec);
-        this.gl.uniform3fv(uAmbientLightLocation, isSun ? [0.3, 0.3, 0.3] : [0.1, 0.1, 0.1]);
         
-        // If it's the Sun, set the emissive color to make it glow
-        if (isSun) {
-            this.gl.uniform3fv(uEmissiveColorLocation, emissiveColor);
-        }
+        this.gl.uniform3fv(uAmbientLightLocation, new Float32Array(isSun ? [1.0, 1.0, 0.5] : [0.1, 0.1, 0.1]));
     
-        // Enable attributes for position, normal, and texture coordinates
         const aPositionLocation = this.gl.getAttribLocation(this.program, "aPosition");
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         this.gl.vertexAttribPointer(aPositionLocation, 3, this.gl.FLOAT, false, 0, 0);
@@ -283,13 +259,11 @@ export class Sphere {
         this.gl.vertexAttribPointer(aTexCoordLocation, 2, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(aTexCoordLocation);
     
-        // Bind the texture and set the uniform
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
         const uSamplerLocation = this.gl.getUniformLocation(this.program, "uSampler");
         this.gl.uniform1i(uSamplerLocation, 0);
     
-        // Draw the sphere
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         this.gl.drawElements(this.gl.TRIANGLES, 6 * this.config.latitudeBands * this.config.longitudeBands, this.gl.UNSIGNED_SHORT, 0);
     }       
