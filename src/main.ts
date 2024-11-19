@@ -10,6 +10,7 @@ import { Saturn } from "./planets/saturn";
 import { Uranus } from "./planets/uranus";
 import { Neptune } from "./planets/neptune";
 import { Pluto } from "./planets/pluto";
+import { AsteroidBelt } from "./elements/asteroidBelt";
 
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
@@ -70,6 +71,8 @@ const uranus = new Uranus(gl);
 const neptune = new Neptune(gl);
 const pluto = new Pluto(gl);
 
+const asteroidBelt = new AsteroidBelt(gl, 200, 3.5, 4.7);
+const kuiperBelt = new AsteroidBelt(gl, 5000, 19.0, 30.0)
 let cameraAngleX = 0;
 let cameraAngleY = 0;
 let cameraDistance = 2;
@@ -139,6 +142,8 @@ function animate() {
         pluto.render(cameraAngleX, cameraAngleY, cameraDistance);
         gridField.render(cameraAngleX, cameraAngleY);
         subgridField.render(cameraAngleX, cameraAngleY);
+        asteroidBelt.render(cameraAngleX, cameraAngleY, cameraDistance);
+        kuiperBelt.render(cameraAngleX, cameraAngleY, cameraDistance);
     }
     requestAnimationFrame(animate);
 }
