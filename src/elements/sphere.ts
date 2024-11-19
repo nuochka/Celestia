@@ -167,8 +167,10 @@ export class Sphere {
             throw new Error('Failed to create texture');
         }
     
+        // Bind the texture to WebGL
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
     
+        // Set texture parameters for wrapping and filtering
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
@@ -187,12 +189,17 @@ export class Sphere {
             image.onload = () => {
                 this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
                 this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
-                // Generate mipmaps for the texture
-                this.gl.generateMipmap(this.gl.TEXTURE_2D);
-                resolve(texture); 
+    
+                if ((image.width & (image.width - 1)) === 0 && (image.height & (image.height - 1)) === 0) {
+                    this.gl.generateMipmap(this.gl.TEXTURE_2D);
+                    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
+                } else {
+                    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+                }
+                resolve(texture);
             };
             image.onerror = () => {
-                reject(new Error(`Failed to load texture image: ${url}`)); 
+                reject(new Error(`Failed to load texture image: ${url}`));
             };
         });
     }
