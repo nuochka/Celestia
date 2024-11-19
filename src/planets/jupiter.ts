@@ -14,6 +14,6 @@ export class Jupiter extends Planet {
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/jupiter_texture.jpg' 
         };
-        super(gl, jupiterConfig, 20.0, 0.001, 0.005, [0.8, 0.8, 0.6, 1.0]);
+        super(gl, jupiterConfig, 17.0, 0.001, 0.005, [0.8, 0.8, 0.6, 1.0]);
     }
 }

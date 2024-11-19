@@ -13,6 +13,6 @@ export class Saturn extends Planet{
             zFar: 100.0,
             textureUrl: 'http://127.0.0.1:8080/textures/saturn_texture.jpg'
         };
-        super(gl, saturnConfig, 18, -0.002, 0.001, [0.8, 0.8, 0.6, 1.0]);
+        super(gl, saturnConfig, 22.0, -0.002, 0.001, [0.8, 0.8, 0.6, 1.0]);
     }
 }
