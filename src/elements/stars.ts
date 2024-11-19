@@ -169,7 +169,7 @@ export class StarField {
         const randomOffsetLocation = gl.getAttribLocation(program, 'aRandomOffset');
         gl.bindBuffer(gl.ARRAY_BUFFER, this.blinkBuffer);
         gl.enableVertexAttribArray(blinkSpeedLocation);
-        gl.vertexAttribPointer(blinkSpeedLocation, 1, gl.FLOAT, false, 12, 3);
+        gl.vertexAttribPointer(blinkSpeedLocation, 1, gl.FLOAT, false, 12, 0);
         gl.enableVertexAttribArray(blinkPhaseLocation);
         gl.vertexAttribPointer(blinkPhaseLocation, 1, gl.FLOAT, false, 12, 4);
         gl.enableVertexAttribArray(randomOffsetLocation);
