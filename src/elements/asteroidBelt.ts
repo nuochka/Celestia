@@ -6,14 +6,18 @@ export class AsteroidBelt {
     private asteroidBuffer: WebGLBuffer;
     private numAsteroids: number;
     private asteroidPositions: Float32Array;
+    private asteroidSpeeds: Float32Array;
     private minDistance: number;
     private maxDistance: number;
+    private angleOffsets: Float32Array;
 
     constructor(gl: WebGLRenderingContext, numAsteroids: number, minDistance: number, maxDistance: number) {
         this.gl = gl;
         this.numAsteroids = numAsteroids;
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
+        this.angleOffsets = new Float32Array(numAsteroids);
+        this.asteroidSpeeds = new Float32Array(numAsteroids);
         this.asteroidPositions = this.generateAsteroidPositions();
 
         const vertexShaderSource = `
@@ -68,10 +72,9 @@ export class AsteroidBelt {
     
         return shader;
     }
-    
+
     private generateAsteroidPositions(): Float32Array {
         const positions: number[] = [];
-
         for (let i = 0; i < this.numAsteroids; i++) {
             const distance = Math.random() * (this.maxDistance - this.minDistance) + this.minDistance;
             const angle = Math.random() * Math.PI * 2;
@@ -79,7 +82,10 @@ export class AsteroidBelt {
             const y = Math.random() * 0.1 - 0.05;
             const z = distance * Math.sin(angle);
 
-            positions.push(x * 1.2, y, z * 1.2);
+            this.angleOffsets[i] = angle;
+            this.asteroidSpeeds[i] = (Math.random() * 0.5 + 0.5) * 0.01;
+
+            positions.push(x, y, z);
         }
         return new Float32Array(positions);
     }
@@ -89,9 +95,23 @@ export class AsteroidBelt {
         if (!buffer) throw new Error('Failed to create buffer for asteroids');
 
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, this.asteroidPositions, this.gl.STATIC_DRAW);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, this.asteroidPositions, this.gl.DYNAMIC_DRAW);
 
         return buffer;
+    }
+
+    public update(deltaTime: number) {
+        for (let i = 0; i < this.numAsteroids; i++) {
+            this.angleOffsets[i] += this.asteroidSpeeds[i] * deltaTime;
+            const distance = Math.sqrt(
+                this.asteroidPositions[i * 3] ** 2 + this.asteroidPositions[i * 3 + 2] ** 2
+            );
+            this.asteroidPositions[i * 3] = distance * Math.cos(this.angleOffsets[i]); 
+            this.asteroidPositions[i * 3 + 1] += Math.sin(deltaTime * 0.001) * 0.01;
+            this.asteroidPositions[i * 3 + 2] = distance * Math.sin(this.angleOffsets[i]);
+        }
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.asteroidBuffer);
+        this.gl.bufferSubData(this.gl.ARRAY_BUFFER, 0, this.asteroidPositions);
     }
 
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -124,5 +144,5 @@ export class AsteroidBelt {
         gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 
         gl.drawArrays(gl.POINTS, 0, this.numAsteroids);
-    }    
+    }
 }

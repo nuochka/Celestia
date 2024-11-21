@@ -127,6 +127,8 @@ function animate() {
         uranus.update();
         neptune.update();
         pluto.update();
+        asteroidBelt.update(-0.1);
+        kuiperBelt.update(-0.003);
 
         gl.clear(gl.DEPTH_BUFFER_BIT);
         gl.depthMask(true);
