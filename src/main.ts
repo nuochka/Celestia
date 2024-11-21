@@ -71,13 +71,13 @@ const uranus = new Uranus(gl);
 const neptune = new Neptune(gl);
 const pluto = new Pluto(gl);
 
-const asteroidBelt = new AsteroidBelt(gl, 200, 3.5, 4.7);
-const kuiperBelt = new AsteroidBelt(gl, 5000, 19.0, 30.0)
+const asteroidBelt = new AsteroidBelt(gl, 300, 10, 13.5);
+const kuiperBelt = new AsteroidBelt(gl, 6000, 56, 100)
 let cameraAngleX = 0;
 let cameraAngleY = 0;
 let cameraDistance = 2;
 const minCameraDistance = 1.0;
-const maxCameraDistance = 50.0;
+const maxCameraDistance = 200.0;
 let lastMouseX = 0;
 let lastMouseY = 0;
 let isMouseDown = false;
@@ -107,7 +107,7 @@ canvas.addEventListener('mousemove', (event) => {
 
 canvas.addEventListener('wheel', (event) => {
     event.preventDefault();
-    cameraDistance += event.deltaY * 0.001;
+    cameraDistance += event.deltaY * 0.005;
     cameraDistance = Math.max(minCameraDistance, Math.min(maxCameraDistance, cameraDistance));
 });
 
