@@ -10,14 +10,42 @@ export class Ring {
     private texture: WebGLTexture | undefined;
     private indexCount: number;
 
+    private fieldOfView: number;
+    private aspect: number;
+    private zNear: number;
+    private zFar: number;
+
+    private rotationAngle: number = 0;
+    private orbitAngle: number = 0;
+    private orbitalSpeed: number;
+    private rotationSpeed: number;
+
+    private x: number;
+    private y: number;
+    private z: number;
+
     constructor(
         gl: WebGLRenderingContext,
         innerRadius: number,
         outerRadius: number,
         radialSegments: number,
-        textureUrl: string
+        textureUrl: string,
+        fieldOfView: number,
+        aspect: number,
+        zNear: number,
+        zFar: number,
+        orbitalSpeed: number,
+        rotationSpeed: number = 0.002,
+        x: number = 22,
+        y: number = 0,
+        z: number = 0
     ) {
         this.gl = gl;
+
+        this.fieldOfView = fieldOfView;
+        this.aspect = aspect;
+        this.zNear = zNear;
+        this.zFar = zFar;
 
         this.program = Ring.createProgram(gl);
 
@@ -32,6 +60,13 @@ export class Ring {
         Ring.loadTexture(gl, textureUrl).then((texture) => {
             this.texture = texture;
         });
+
+        this.orbitalSpeed = orbitalSpeed;
+        this.rotationSpeed = rotationSpeed;
+
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     static createProgram(gl: WebGLRenderingContext): WebGLProgram {
@@ -84,10 +119,10 @@ export class Ring {
             const cos = Math.cos(angle);
             const sin = Math.sin(angle);
     
-            positions.push(outerRadius * cos, outerRadius * sin, 0);
+            positions.push(outerRadius * cos, 0, outerRadius * sin);
             texCoords.push(0, (i / radialSegments));
     
-            positions.push(innerRadius * cos, innerRadius * sin, 0);
+            positions.push(innerRadius * cos, 0, innerRadius * sin);
             texCoords.push(1, (i / radialSegments));
     
             if (i < radialSegments) {
@@ -148,11 +183,31 @@ export class Ring {
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        const matrix = mat4.create();
-        mat4.perspective(matrix, Math.PI / 4, gl.canvas.width / gl.canvas.height, 0.1, 1000);
-        mat4.translate(matrix, matrix, [0, 0, -cameraDistance]);
-        mat4.rotateX(matrix, matrix, cameraAngleX);
-        mat4.rotateY(matrix, matrix, cameraAngleY);
+        const perspectiveMatrix = mat4.create();
+        mat4.perspective(
+            perspectiveMatrix,
+            (this.fieldOfView * Math.PI) / 180, 
+            this.aspect,                         
+            this.zNear,                         
+            this.zFar                            
+        );
+
+        const cameraMatrix = mat4.create();
+        const cameraPosition = new Float32Array([
+            cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX), 
+            cameraDistance * Math.sin(cameraAngleX),                          
+            cameraDistance * Math.cos(cameraAngleY) * Math.cos(cameraAngleX) 
+        ]);
+        
+        mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
+        mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
+        const objectMatrix = mat4.create();
+
+        mat4.rotateY(objectMatrix, objectMatrix, this.rotationAngle);
+        mat4.rotateY(objectMatrix, objectMatrix, this.orbitAngle);
+        mat4.translate(objectMatrix, objectMatrix, [this.x, this.y, this.z]);
+
+        mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         const aPosition = gl.getAttribLocation(program, 'aPosition');
@@ -165,7 +220,7 @@ export class Ring {
         gl.enableVertexAttribArray(aTexCoord);
 
         const uMatrix = gl.getUniformLocation(program, 'uMatrix');
-        gl.uniformMatrix4fv(uMatrix, false, matrix);
+        gl.uniformMatrix4fv(uMatrix, false, perspectiveMatrix);
 
         if (this.texture) {
             gl.activeTexture(gl.TEXTURE0);
@@ -176,5 +231,7 @@ export class Ring {
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
+        this.orbitAngle += this.orbitalSpeed;
+        this.rotationAngle += this.rotationSpeed;
     }
 }
