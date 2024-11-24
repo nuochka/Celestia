@@ -14,6 +14,7 @@ export class Ring {
     private aspect: number;
     private zNear: number;
     private zFar: number;
+    private isUranus: boolean;
 
     private rotationAngle: number = 0;
     private orbitAngle: number = 0;
@@ -38,7 +39,8 @@ export class Ring {
         rotationSpeed: number = 0.002,
         x: number = 22,
         y: number = 0,
-        z: number = 0
+        z: number = 0,
+        isUranus: boolean = false,
     ) {
         this.gl = gl;
 
@@ -46,11 +48,12 @@ export class Ring {
         this.aspect = aspect;
         this.zNear = zNear;
         this.zFar = zFar;
+        this.isUranus = isUranus;
 
         this.program = Ring.createProgram(gl);
 
         const { positionBuffer, texCoordBuffer, indexBuffer, indexCount } =
-            Ring.createBuffers(gl, innerRadius, outerRadius, radialSegments);
+            Ring.createBuffers(gl, innerRadius, outerRadius, radialSegments, isUranus);
         this.positionBuffer = positionBuffer;
         this.texCoordBuffer = texCoordBuffer;
         this.indexBuffer = indexBuffer;
@@ -102,7 +105,8 @@ export class Ring {
         gl: WebGLRenderingContext,
         innerRadius: number,
         outerRadius: number,
-        radialSegments: number
+        radialSegments: number,
+        isUranus: boolean
     ): {
         positionBuffer: WebGLBuffer;
         texCoordBuffer: WebGLBuffer;
@@ -201,12 +205,16 @@ export class Ring {
         
         mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
+        
         const objectMatrix = mat4.create();
 
         mat4.rotateY(objectMatrix, objectMatrix, this.rotationAngle);
         mat4.rotateY(objectMatrix, objectMatrix, this.orbitAngle);
         mat4.translate(objectMatrix, objectMatrix, [this.x, this.y, this.z]);
 
+        if (this.isUranus) {
+            mat4.rotateZ(objectMatrix, objectMatrix, Math.PI * 98 / 180);
+        }
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
