@@ -46,22 +46,37 @@ export function togglePause(toggleButton: HTMLElement) {
     });
 }
 
+let scale = 1;
+const scaleSlider = document.getElementById('scale-slider') as HTMLInputElement;
+const scaleDisplay = document.getElementById('scale-display') as HTMLElement;
+
+if (scaleSlider) {
+    scaleSlider.addEventListener('input', () => {
+        scale = parseFloat(scaleSlider.value);
+        scaleDisplay.textContent = `Speed Scale: ${scale.toFixed(2)}`;
+    });
+} else {
+    console.error('Scale slider not found');
+}
+
+
+
 export function updateScene(objects: any) {
     if (!paused) {
-        objects.saturnRing.update();
-        objects.uranusRing.update();
-        objects.sun.update();
-        objects.mercury.update();
-        objects.venus.update();
-        objects.earth.update();
-        objects.mars.update();
-        objects.jupiter.update();
-        objects.saturn.update();
-        objects.uranus.update();
-        objects.neptune.update();
-        objects.pluto.update();
-        objects.asteroidBelt.update(-0.1);
-        objects.kuiperBelt.update(-0.003);
+        objects.saturnRing.update(scale);
+        objects.uranusRing.update(scale);
+        objects.sun.update(scale);
+        objects.mercury.update(scale);
+        objects.venus.update(scale);
+        objects.earth.update(scale);
+        objects.mars.update(scale);
+        objects.jupiter.update(scale);
+        objects.saturn.update(scale);
+        objects.uranus.update(scale);
+        objects.neptune.update(scale);
+        objects.pluto.update(scale);
+        objects.asteroidBelt.update(-0.1 * scale);
+        objects.kuiperBelt.update(-0.003 * scale);
     }
 }
 

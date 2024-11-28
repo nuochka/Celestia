@@ -32,12 +32,12 @@ export abstract class Planet {
         });
     }
 
-    public update() {
+    public update(scale: number) {
         this.angle += this.orbitSpeed;
         if (this.angle >= 2 * Math.PI) {
             this.angle -= 2 * Math.PI;
         }
-        this.rotationAngle += this.rotationSpeed;
+        this.rotationAngle += this.rotationSpeed * scale;
         if (this.rotationAngle >= 2 * Math.PI) {
             this.rotationAngle -= 2 * Math.PI;
         }

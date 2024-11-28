@@ -178,8 +178,8 @@ export class Ring {
         });
     }
 
-    public update() {
-        this.orbitAngle += this.orbitalSpeed;
+    public update(scale: number) {
+        this.orbitAngle += this.orbitalSpeed * scale;
         if (this.orbitAngle >= 2 * Math.PI) {
             this.orbitAngle -= 2 * Math.PI;
         }
