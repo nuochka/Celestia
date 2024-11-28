@@ -9,3 +9,13 @@ canvas {
     width: 100vw;
     height: 100vh;
 }
+
+#toggle-motion {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
