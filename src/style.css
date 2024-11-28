@@ -19,3 +19,23 @@ canvas {
     font-size: 16px;
     cursor: pointer;
 }
+
+#scale-container {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 1000;
+}
+
+#scale-slider {
+    width: 200px;
+}
+
+#scale-display {
+    display: block;
+    margin-top: 10px;
+    font-size: 16px;
+    color: white;
+}
