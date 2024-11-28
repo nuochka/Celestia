@@ -6,12 +6,12 @@ import { Venus } from "./planets/venus";
 import { Earth } from "./planets/earth";
 import { Mars } from "./planets/mars";
 import { Jupiter } from "./planets/jupiter";
-import { Saturn } from "./planets/saturn";
-import { Uranus } from "./planets/uranus";
+import { Saturn, saturnConfig } from "./planets/saturn";
+import { Uranus, uranusConfig } from "./planets/uranus";
 import { Neptune } from "./planets/neptune";
 import { Pluto } from "./planets/pluto";
 import { AsteroidBelt } from "./elements/asteroidBelt";
-
+import { Ring } from "./elements/ring";
 
 const canvas = document.getElementById("solar-system") as HTMLCanvasElement;
 const gl = canvas.getContext("webgl");
@@ -72,7 +72,11 @@ const neptune = new Neptune(gl);
 const pluto = new Pluto(gl);
 
 const asteroidBelt = new AsteroidBelt(gl, 300, 10, 13.5);
-const kuiperBelt = new AsteroidBelt(gl, 6000, 56, 100)
+const kuiperBelt = new AsteroidBelt(gl, 6000, 56, 100);
+
+const saturnRing = new Ring(gl, 1.0, 2.5, 100, 'http://127.0.0.1:8080/textures/saturn_ring.png', saturnConfig.fieldOfView, saturnConfig.aspect, saturnConfig.zNear, saturnConfig.zFar, 0.001, 0.002, 22.0);
+const uranusRing = new Ring(gl, 1.0, 1.5, 100, 'http://127.0.0.1:8080/textures/uranus_ring.jpg', uranusConfig.fieldOfView, uranusConfig.aspect, uranusConfig.zNear, uranusConfig.zFar, 0.0005, 0.0004, 40.0, 0, 0, true);
+
 let cameraAngleX = 0;
 let cameraAngleY = 0;
 let cameraDistance = 2;
@@ -111,12 +115,22 @@ canvas.addEventListener('wheel', (event) => {
     cameraDistance = Math.max(minCameraDistance, Math.min(maxCameraDistance, cameraDistance));
 });
 
-function animate() {
-    if (gl) {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthMask(false);
-        starField.render(cameraAngleX, cameraAngleY, 1);
+let paused = false;
+
+const toggleButton = document.getElementById('toggle-motion');
+if (toggleButton) {
+    toggleButton.addEventListener('click', () => {
+        paused = !paused;
+        toggleButton.textContent = paused ? 'Resume' : 'Pause';
+    });
+} else {
+    console.error('Toggle button not found');
+}
+
+function updateScene() {
+    if (!paused) {
+        saturnRing.update();
+        uranusRing.update();
         sun.update();
         mercury.update();
         venus.update();
@@ -129,24 +143,43 @@ function animate() {
         pluto.update();
         asteroidBelt.update(-0.1);
         kuiperBelt.update(-0.003);
-
-        gl.clear(gl.DEPTH_BUFFER_BIT);
-        gl.depthMask(true);
-        sun.render(cameraAngleX, cameraAngleY, cameraDistance);
-        mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
-        venus.render(cameraAngleX, cameraAngleY, cameraDistance);
-        earth.render(cameraAngleX, cameraAngleY, cameraDistance);
-        mars.render(cameraAngleX, cameraAngleY, cameraDistance);
-        jupiter.render(cameraAngleX, cameraAngleY, cameraDistance);
-        saturn.render(cameraAngleX, cameraAngleY, cameraDistance);
-        uranus.render(cameraAngleX, cameraAngleY, cameraDistance);
-        neptune.render(cameraAngleX, cameraAngleY, cameraDistance);
-        pluto.render(cameraAngleX, cameraAngleY, cameraDistance);
-        gridField.render(cameraAngleX, cameraAngleY);
-        subgridField.render(cameraAngleX, cameraAngleY);
-        asteroidBelt.render(cameraAngleX, cameraAngleY, cameraDistance);
-        kuiperBelt.render(cameraAngleX, cameraAngleY, cameraDistance);
     }
+
+}
+
+function renderScene() {
+    if (!gl) return;
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.depthMask(false);
+    starField.render(cameraAngleX, cameraAngleY, 1);
+
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.depthMask(true);
+
+    sun.render(cameraAngleX, cameraAngleY, cameraDistance);
+    mercury.render(cameraAngleX, cameraAngleY, cameraDistance);
+    venus.render(cameraAngleX, cameraAngleY, cameraDistance);
+    earth.render(cameraAngleX, cameraAngleY, cameraDistance);
+    mars.render(cameraAngleX, cameraAngleY, cameraDistance);
+    jupiter.render(cameraAngleX, cameraAngleY, cameraDistance);
+    saturn.render(cameraAngleX, cameraAngleY, cameraDistance);
+    uranus.render(cameraAngleX, cameraAngleY, cameraDistance);
+    neptune.render(cameraAngleX, cameraAngleY, cameraDistance);
+    pluto.render(cameraAngleX, cameraAngleY, cameraDistance);
+
+    gridField.render(cameraAngleX, cameraAngleY);
+    subgridField.render(cameraAngleX, cameraAngleY);
+
+    asteroidBelt.render(cameraAngleX, cameraAngleY, cameraDistance);
+    kuiperBelt.render(cameraAngleX, cameraAngleY, cameraDistance);
+
+    saturnRing.render(cameraAngleX, cameraAngleY, cameraDistance);
+    uranusRing.render(cameraAngleX, cameraAngleY, cameraDistance);
+}
+
+function animate() {
+    updateScene();
+    renderScene();
     requestAnimationFrame(animate);
 }
 
