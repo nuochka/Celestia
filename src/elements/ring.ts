@@ -178,15 +178,28 @@ export class Ring {
         });
     }
 
+    public update() {
+        this.orbitAngle += this.orbitalSpeed;
+        if (this.orbitAngle >= 2 * Math.PI) {
+            this.orbitAngle -= 2 * Math.PI;
+        }
+    
+        this.rotationAngle += this.rotationSpeed;
+        if (this.rotationAngle >= 2 * Math.PI) {
+            this.rotationAngle -= 2 * Math.PI;
+        }
+    }
+    
+    
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         const gl = this.gl;
         const program = this.program;
-
+    
         gl.useProgram(program);
-
+    
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
+    
         const perspectiveMatrix = mat4.create();
         mat4.perspective(
             perspectiveMatrix,
@@ -195,7 +208,7 @@ export class Ring {
             this.zNear,                         
             this.zFar                            
         );
-
+    
         const cameraMatrix = mat4.create();
         const cameraPosition = new Float32Array([
             cameraDistance * Math.sin(cameraAngleY) * Math.cos(cameraAngleX), 
@@ -207,39 +220,37 @@ export class Ring {
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
         
         const objectMatrix = mat4.create();
-
+    
         mat4.rotateY(objectMatrix, objectMatrix, this.rotationAngle);
         mat4.rotateY(objectMatrix, objectMatrix, this.orbitAngle);
         mat4.translate(objectMatrix, objectMatrix, [this.x, this.y, this.z]);
-
+    
         if (this.isUranus) {
             mat4.rotateZ(objectMatrix, objectMatrix, Math.PI * 98 / 180);
         }
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
-
+    
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         const aPosition = gl.getAttribLocation(program, 'aPosition');
         gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(aPosition);
-
+    
         gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
         const aTexCoord = gl.getAttribLocation(program, 'aTexCoord');
         gl.vertexAttribPointer(aTexCoord, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(aTexCoord);
-
+    
         const uMatrix = gl.getUniformLocation(program, 'uMatrix');
         gl.uniformMatrix4fv(uMatrix, false, perspectiveMatrix);
-
+    
         if (this.texture) {
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
             const uSampler = gl.getUniformLocation(program, 'uSampler');
             gl.uniform1i(uSampler, 0);
         }
-
+    
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
-        this.orbitAngle += this.orbitalSpeed;
-        this.rotationAngle += this.rotationSpeed;
-    }
+    }    
 }
