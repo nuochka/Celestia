@@ -179,16 +179,10 @@ export class Ring {
     }
 
     public update(scale: number) {
-        this.orbitAngle += this.orbitalSpeed * scale;
-        if (this.orbitAngle >= 2 * Math.PI) {
-            this.orbitAngle -= 2 * Math.PI;
-        }
-    
-        this.rotationAngle += this.rotationSpeed;
-        if (this.rotationAngle >= 2 * Math.PI) {
-            this.rotationAngle -= 2 * Math.PI;
-        }
+        this.orbitAngle = (this.orbitAngle + this.orbitalSpeed * scale) % (2 * Math.PI);
+        this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
     }
+    
     
     
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {

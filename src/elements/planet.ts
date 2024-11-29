@@ -33,14 +33,8 @@ export abstract class Planet {
     }
 
     public update(scale: number) {
-        this.angle += this.orbitSpeed;
-        if (this.angle >= 2 * Math.PI) {
-            this.angle -= 2 * Math.PI;
-        }
-        this.rotationAngle += this.rotationSpeed * scale;
-        if (this.rotationAngle >= 2 * Math.PI) {
-            this.rotationAngle -= 2 * Math.PI;
-        }
+        this.angle = (this.angle + this.orbitSpeed * scale) % (2 * Math.PI);
+        this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
     }
 
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
