@@ -1,5 +1,5 @@
 import { mat4 } from 'gl-matrix';
-import { createProgram } from './../webgl-utils';
+import { createProgram } from '../utils/webgl-utils';
 
 export class Ring {
     private gl: WebGLRenderingContext;
