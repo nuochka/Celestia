@@ -10,6 +10,7 @@ export class OrbitField {
     private zFar: number;
     private orbitBuffer: WebGLBuffer;
     private numVertices: number; 
+    private isVisible: boolean;
 
     constructor(gl: WebGLRenderingContext, config: { radius: number, color: [number, number, number, number], fieldOfView: number, aspect: number, zNear: number, zFar: number }) {
         this.gl = gl;
@@ -19,6 +20,7 @@ export class OrbitField {
         this.aspect = config.aspect;
         this.zNear = config.zNear;
         this.zFar = config.zFar;
+        this.isVisible = true;
 
         // Create the orbit buffer
         const orbitVertices = this.createOrbitVertices(this.radius, 100);
@@ -27,6 +29,14 @@ export class OrbitField {
         this.gl.bufferData(this.gl.ARRAY_BUFFER, orbitVertices, this.gl.STATIC_DRAW);
         
         this.numVertices = orbitVertices.length / 3;
+    }
+
+    public getIsVisible(): boolean {
+        return this.isVisible;
+    }
+
+    public setVisible(isVisible: boolean): void {
+        this.isVisible = isVisible;
     }
 
     // Function to create orbit vertices
@@ -43,6 +53,7 @@ export class OrbitField {
 
     // Render the orbit
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
+        if (!this.isVisible) return;
         const gl = this.gl;
     
         const program = gl.createProgram()!;

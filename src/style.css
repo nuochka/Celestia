@@ -30,6 +30,16 @@ canvas {
     cursor: pointer;
 }
 
+#toggleOrbitButton {
+    position: absolute;
+    top: 120px;
+    left: 20px;
+    z-index: 1;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 #scale-container {
     position: absolute;
     bottom: 20px;

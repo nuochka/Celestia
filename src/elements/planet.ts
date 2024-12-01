@@ -13,6 +13,8 @@ export abstract class Planet {
     protected rotationAngle: number = 0;
     protected rotationSpeed: number;
 
+    private isOrbitVisible: boolean = true;
+
     constructor(gl: WebGLRenderingContext, config: SphereConfig, orbitRadius: number, orbitSpeed: number, rotationSpeed: number, orbitColor: [number, number, number, number]) {
         this.gl = gl;
         this.orbitRadius = orbitRadius;
@@ -30,6 +32,11 @@ export abstract class Planet {
             zNear: config.zNear,
             zFar: config.zFar
         });
+    }
+
+    public toggleOrbitVisibility(): void {
+        this.isOrbitVisible = !this.isOrbitVisible;
+        this.orbit.setVisible(this.isOrbitVisible);
     }
 
     public update(scale: number) {

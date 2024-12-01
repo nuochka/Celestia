@@ -57,12 +57,10 @@ abstract class BaseGridField {
         this.cameraDistance = Math.max(1, this.cameraDistance + delta);
     }
 
-    // Setter for visibility
     public setVisible(isVisible: boolean) {
         this.isVisible = isVisible;
     }
 
-    // Getter for visibility
     public getIsVisible(): boolean {
         return this.isVisible;
     }
