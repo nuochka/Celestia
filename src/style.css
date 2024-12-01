@@ -20,6 +20,16 @@ canvas {
     cursor: pointer;
 }
 
+#toggleGridButton {
+    position: absolute;
+    top: 70px;
+    left: 20px;
+    z-index: 1;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 #scale-container {
     position: absolute;
     bottom: 20px;

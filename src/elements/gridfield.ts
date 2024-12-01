@@ -21,6 +21,7 @@ abstract class BaseGridField {
     protected program: WebGLProgram;
     protected positionBuffer: WebGLBuffer;
     protected cameraDistance: number = 0.5;
+    private isVisible: boolean = true;
 
     constructor(gl: WebGLRenderingContext, config: GridFieldConfig, vertexShaderSource: string, fragmentShaderSource: string) {
         this.gl = gl;
@@ -56,8 +57,19 @@ abstract class BaseGridField {
         this.cameraDistance = Math.max(1, this.cameraDistance + delta);
     }
 
+    // Setter for visibility
+    public setVisible(isVisible: boolean) {
+        this.isVisible = isVisible;
+    }
+
+    // Getter for visibility
+    public getIsVisible(): boolean {
+        return this.isVisible;
+    }
+
     // Common render logic for both grid and subgrid
     protected render(cameraAngleX: number, cameraAngleY: number) {
+        if (!this.isVisible) return;
         const gl = this.gl;
         const program = this.program;
 

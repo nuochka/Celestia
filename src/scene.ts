@@ -42,6 +42,14 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
         subgridSize: 10, 
     };
 
+    const toggleGridButton = document.getElementById("toggleGridButton") as HTMLButtonElement;
+
+    toggleGridButton.addEventListener("click", () => {
+        const isGridVisible = gridField.getIsVisible();
+        gridField.setVisible(!isGridVisible);
+        subgridField.setVisible(!isGridVisible);
+    });
+
     const gridField = new GridField(gl, gridFieldConfig);
     const subgridField = new SubgridField(gl, subgridConfig);
     const starField = new StarField(gl, starConfig);
@@ -82,3 +90,4 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
         uranusRing
     };
 }
+
