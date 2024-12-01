@@ -69,6 +69,23 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
 
     const saturnRing = new Ring(gl, 1.0, 2.5, 100, 'http://127.0.0.1:8080/textures/saturn_ring.png', saturnConfig.fieldOfView, saturnConfig.aspect, saturnConfig.zNear, saturnConfig.zFar, 0.001, 0.002, 22.0);
     const uranusRing = new Ring(gl, 1.0, 1.5, 100, 'http://127.0.0.1:8080/textures/uranus_ring.jpg', uranusConfig.fieldOfView, uranusConfig.aspect, uranusConfig.zNear, uranusConfig.zFar, 0.0005, 0.0004, 40.0, 0, 0, true);
+    const planets = [
+        mercury,
+        venus,
+        earth,
+        mars,
+        jupiter,
+        saturn,
+        uranus,
+        neptune,
+        pluto
+    ];
+
+    const toggleOrbitButton = document.getElementById("toggleOrbitButton") as HTMLButtonElement;
+
+    toggleOrbitButton.addEventListener("click", () => {
+        planets.forEach(planet => planet.toggleOrbitVisibility());
+    });
 
     return {
         gridField,
@@ -90,4 +107,3 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
         uranusRing
     };
 }
-
