@@ -60,6 +60,22 @@ if (scaleSlider) {
 }
 
 
+const togglePlanetMenuButton = document.getElementById("togglePlanetMenuButton") as HTMLButtonElement;
+const planetList = document.getElementById("planetList") as HTMLUListElement;
+
+togglePlanetMenuButton.addEventListener("click", () => {
+    if (planetList.classList.contains("hidden")) {
+        planetList.classList.remove("hidden");
+        planetList.classList.add("expanded");
+        togglePlanetMenuButton.textContent = "Hide Planets";
+    } else {
+        planetList.classList.remove("expanded");
+        planetList.classList.add("hidden");
+        togglePlanetMenuButton.textContent = "Show Planets";
+    }
+});
+
+
 
 export function updateScene(objects: any) {
     if (!paused) {
