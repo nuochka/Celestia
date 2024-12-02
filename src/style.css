@@ -3,11 +3,37 @@ body, html {
     padding: 0;
     overflow: hidden;
     height: 100%;
+    font-family: 'Orbitron', sans-serif;
+    background: #1a1a2e;
+    color: #fff;
 }
+
 canvas {
     display: block;
     width: 100vw;
     height: 100vh;
+}
+
+button {
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    font-family: 'Orbitron', sans-serif;
+}
+
+button:hover {
+    background-color: #2563eb;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
 }
 
 #toggle-motion {
@@ -15,9 +41,6 @@ canvas {
     top: 20px;
     left: 20px;
     z-index: 1;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 #toggleGridButton {
@@ -25,9 +48,6 @@ canvas {
     top: 70px;
     left: 20px;
     z-index: 1;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 #toggleOrbitButton {
@@ -35,9 +55,6 @@ canvas {
     top: 120px;
     left: 20px;
     z-index: 1;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
 }
 
 #scale-container {
@@ -47,17 +64,30 @@ canvas {
     transform: translateX(-50%);
     text-align: center;
     z-index: 1000;
+    font-size: 16px;
+    color: white;
+    padding: 15px;
+    border: 2px solid #2563eb;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 #scale-slider {
     width: 200px;
+    background-color: #444;
+    border-radius: 10px;
+    height: 10px;
+    transition: background-color 0.3s;
+}
+
+#scale-slider:hover {
+    background-color: #1e3a8a;
 }
 
 #scale-display {
     display: block;
     margin-top: 10px;
     font-size: 16px;
-    color: white;
 }
 
 #togglePlanetMenuButton {
@@ -66,6 +96,12 @@ canvas {
     right: 10px;
     z-index: 1000;
     padding: 10px;
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Orbitron', sans-serif;
 }
 
 #planetList {
@@ -73,18 +109,33 @@ canvas {
     top: 50px;
     right: 10px;
     z-index: 1000;
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ccc;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 2px solid #2563eb;
+    border-radius: 8px;
     padding: 10px;
     list-style: none;
     max-height: 200px;
     overflow-y: auto;
     display: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
 #planetList.expanded {
     display: block;
 }
+
+#planetList li {
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#planetList li:hover {
+    background-color: #2563eb;
+    border-radius: 5px;
+}
+
 
 .hidden {
     display: none;
