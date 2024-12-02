@@ -46,8 +46,12 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
 
     toggleGridButton.addEventListener("click", () => {
         const isGridVisible = gridField.getIsVisible();
+
         gridField.setVisible(!isGridVisible);
         subgridField.setVisible(!isGridVisible);
+        if (toggleGridButton) {
+            toggleGridButton.textContent = isGridVisible ? "Show Grid" : "Hide Grid";
+        }
     });
 
     const gridField = new GridField(gl, gridFieldConfig);

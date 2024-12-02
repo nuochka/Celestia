@@ -37,7 +37,12 @@ export abstract class Planet {
     public toggleOrbitVisibility(): void {
         this.isOrbitVisible = !this.isOrbitVisible;
         this.orbit.setVisible(this.isOrbitVisible);
+        const orbitButton = document.getElementById("toggleOrbitButton") as HTMLButtonElement;
+        if (orbitButton) {
+            orbitButton.textContent = this.isOrbitVisible ? "Hide Orbit" : "Show Orbit";
+        }
     }
+    
 
     public update(scale: number) {
         this.angle = (this.angle + this.orbitSpeed * scale) % (2 * Math.PI);
