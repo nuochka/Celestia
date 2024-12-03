@@ -1,4 +1,12 @@
 import { MercurySphere } from './planets/mercury';
+import { VenusSphere } from './planets/venus';
+import { EarthSphere } from './planets/earth';
+import { MarsSphere } from './planets/mars';
+import { JupiterSphere } from './planets/jupiter';
+import { SaturnSphere } from './planets/saturn';
+import { UranusSphere } from './planets/uranus';
+import { NeptuneSphere } from './planets/neptune';
+import { PlutoSphere } from './planets/pluto';
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById('solar-system') as HTMLCanvasElement;
@@ -61,17 +69,24 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentPlanet: any = null;
     const planetSwitchers: { [key: string]: any } = {
         mercury: new MercurySphere(gl),
+        venus: new VenusSphere(gl),
+        earth: new EarthSphere(gl),
+        mars: new MarsSphere(gl),
+        jupiter: new JupiterSphere(gl),
+        saturn: new SaturnSphere(gl),
+        uranus: new UranusSphere(gl),
+        neptune: new NeptuneSphere(gl),
+        pluto: new PlutoSphere(gl)
     };
+
     const urlParams = new URLSearchParams(window.location.search);
     const planetParam = urlParams.get('planet');
-
 
     if (planetParam && planetSwitchers[planetParam]) {
         currentPlanet = planetSwitchers[planetParam];
     } else {
         currentPlanet = planetSwitchers['mercury'];
     }
-
 
     function switchPlanet(planetName: string) {
         if (planetSwitchers[planetName]) {
