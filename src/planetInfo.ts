@@ -7,9 +7,18 @@ import { SaturnSphere } from './planets/saturn';
 import { UranusSphere } from './planets/uranus';
 import { NeptuneSphere } from './planets/neptune';
 import { PlutoSphere } from './planets/pluto';
+import { StarField, StarFieldConfig } from './elements/stars';
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById('solar-system') as HTMLCanvasElement;
+
+    const starConfig: StarFieldConfig = {
+        numStars: 2000,
+        fieldOfView: 40,
+        aspect: canvas.width / canvas.height,
+        zNear: 1,
+        zFar: 1000.0
+    };
 
     if (!canvas) {
         console.error("Canvas element not found");
@@ -23,8 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    gl.clearColor(0.0, 0.0, 0.1, 1.0);
-    gl.enable(gl.DEPTH_TEST);
+    
 
     function resizeCanvas() {
         if (!gl) return;
@@ -95,9 +103,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    const starField = new StarField(gl, starConfig);
+
     function render() {
         if (!gl) return;
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.DEPTH_TEST);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.depthMask(false);
+        starField.render(cameraAngleX, cameraAngleY, 1);
+        gl.clear(gl.DEPTH_BUFFER_BIT);
+        gl.depthMask(true);
         if (currentPlanet) {
             currentPlanet.render(cameraAngleX, cameraAngleY, cameraDistance);
         }
