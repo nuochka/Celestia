@@ -370,4 +370,17 @@ document.addEventListener("DOMContentLoaded", () => {
             togglePlanetMenuButton.textContent = "Show Planets";
         }
     });
+
+    const sidebar = document.getElementById("planet-info-sidebar") as HTMLElement;
+    const toggleSidebarButton = document.getElementById("toggle-sidebar-button") as HTMLButtonElement;
+
+    toggleSidebarButton.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+
+        if (sidebar.classList.contains("collapsed")) {
+            toggleSidebarButton.style.left = "0";
+        } else {
+            toggleSidebarButton.style.left = "442px";
+        }
+    });
 });

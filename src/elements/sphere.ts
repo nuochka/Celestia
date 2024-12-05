@@ -19,7 +19,7 @@ export class Sphere {
     private positionBuffer: WebGLBuffer; 
     private indexBuffer: WebGLBuffer; 
     private texCoordBuffer: WebGLBuffer; 
-    private texture?: WebGLTexture; 
+    private texture?: WebGLTexture;
 
     constructor(gl: WebGLRenderingContext, config: SphereConfig) {
         this.gl = gl;                     
@@ -273,5 +273,5 @@ export class Sphere {
     
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         this.gl.drawElements(this.gl.TRIANGLES, 6 * this.config.latitudeBands * this.config.longitudeBands, this.gl.UNSIGNED_SHORT, 0);
-    }       
+    } 
 }
