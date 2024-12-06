@@ -64,6 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let cameraAngleX = 0;
     let cameraAngleY = 0;
     let cameraDistance = 2.5;
+    let minCameraDistance = 2.5;
+    let maxCameraDistance = 20;
 
     let isMouseDown = false;
     let lastMouseX = 0;
@@ -89,6 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
             lastMouseX = event.clientX;
             lastMouseY = event.clientY;
         }
+    });
+
+    canvas.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        cameraDistance += event.deltaY * 0.005;
+        cameraDistance = Math.max(minCameraDistance, Math.min(maxCameraDistance, cameraDistance));
     });
 
     let currentPlanet: any = null;
