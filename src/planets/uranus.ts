@@ -1,5 +1,6 @@
 import { Planet } from "../elements/planet";
 import { Sphere } from "../elements/sphere"
+import { Ring } from "../elements/ring"
 
 export  const uranusConfig = {
     radius: 0.8,
@@ -30,11 +31,33 @@ export class UranusSphere extends Sphere {
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
     private angularSpeed: number = 0;
+    private ring: Ring;
     
-    constructor(
-        gl: WebGLRenderingContext
-    ) {
+    constructor(gl: WebGLRenderingContext) {
         super(gl, uranusSphereConfig);
+
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        this.ring = new Ring(
+            gl, 
+            0.8, 
+            1.2, 
+            100, 
+            'http://127.0.0.1:8080/textures/uranus_ring.jpg', 
+            uranusConfig.fieldOfView, 
+            uranusConfig.aspect, 
+            uranusConfig.zNear,
+             uranusConfig.zFar, 
+             0.0005, 
+             0.0004, 
+             0, 
+             0, 
+             0, 
+             true
+        );
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -50,5 +73,6 @@ export class UranusSphere extends Sphere {
         lightDirection[2] /= length;
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
+        this.ring.render(cameraAngleX, cameraAngleY, cameraDistance);
     }
 }
