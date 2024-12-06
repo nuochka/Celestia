@@ -41,42 +41,35 @@ export class SaturnSphere extends Sphere{
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        // Создание кольца
         this.ring = new Ring(
             gl,
-            0.8, // Внутренний радиус
-            1.8, // Внешний радиус
-            100, // Сегменты
+            0.8,
+            1.8,
+            100,
             'http://127.0.0.1:8080/textures/saturn_ring.png',
             saturnConfig.fieldOfView,
             saturnConfig.aspect,
             saturnConfig.zNear,
             saturnConfig.zFar,
-            0.001, // Скорость вращения по X
-            0.002, // Скорость вращения по Y
+            0.001,
+            0.002,
             this.orbitRadius
         );
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         this.angle += this.angularSpeed;
-
         const x = this.orbitRadius * Math.cos(this.angle);
         const y = 0;
         const z = this.orbitRadius * Math.sin(this.angle);
-
         const lightDirection = new Float32Array([-x, -y, -z]);
-        const length = Math.sqrt(
-            lightDirection[0] ** 2 + lightDirection[1] ** 2 + lightDirection[2] ** 2
-        );
+
+        const length = Math.sqrt(lightDirection[0] ** 2 + lightDirection[1] ** 2 + lightDirection[2] ** 2);
         lightDirection[0] /= length;
         lightDirection[1] /= length;
         lightDirection[2] /= length;
 
-        // Сначала рендерим сферу
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
-
-        // Затем рендерим кольцо
         this.ring.render(cameraAngleX, cameraAngleY, cameraDistance);
     }
 }
