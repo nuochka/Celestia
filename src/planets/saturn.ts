@@ -1,6 +1,7 @@
 import { Planet } from "../elements/planet";
-import { Sphere } from "../elements/sphere";
+import { Sphere, SphereConfig } from "../elements/sphere";
 import { Ring } from "../elements/ring";
+import { Moon } from "../elements/moon";
 
 
 export const saturnConfig = {
@@ -27,7 +28,7 @@ const saturnSphereConfig = {
     radius: 0.6
 };
 
-export class SaturnSphere extends Sphere{
+export class SaturnSphere extends Sphere {
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
     private angularSpeed: number = 0;
@@ -55,6 +56,30 @@ export class SaturnSphere extends Sphere{
             0.002,
             this.orbitRadius
         );
+
+        this.createAndAddMoon(gl, 3.0, 0.025, 'http://127.0.0.1:8080/textures/moons/mimas_texture.jpg');
+        this.createAndAddMoon(gl, 4.0, 0.025, 'http://127.0.0.1:8080/textures/moons/enceladus_texture.jpg');
+        this.createAndAddMoon(gl, 5.0, 0.025, 'http://127.0.0.1:8080/textures/moons/tethys_texture.jpg');
+        this.createAndAddMoon(gl, 6.5, 0.015, 'http://127.0.0.1:8080/textures/moons/dione_texture.jpg');
+        this.createAndAddMoon(gl, 8.0, 0.02, 'http://127.0.0.1:8080/textures/moons/rhea_texture.jpg');
+        this.createAndAddMoon(gl, 11.5, 0.03, 'http://127.0.0.1:8080/textures/moons/titan_texture.jpg');
+        this.createAndAddMoon(gl, 13.5, 0.03, 'http://127.0.0.1:8080/textures/moons/hyperion_texture.jpg');
+    }
+
+    private createAndAddMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string) {
+        const moonConfig: SphereConfig = {
+            radius: 0.1,
+            latitudeBands: 30,
+            longitudeBands: 30,
+            fieldOfView: 50,
+            aspect: window.innerWidth / window.innerHeight,
+            zNear: 0.1,
+            zFar: 1000.0,
+            textureUrl: textureUrl
+        };
+
+        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
+        super.addMoon(moon);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
