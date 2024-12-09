@@ -1,5 +1,6 @@
 import { SphereConfig, Sphere } from "../elements/sphere";
 import { Planet } from "../elements/planet";
+import { Moon } from "../elements/moon";
 
 export class Earth extends Planet{
 
@@ -35,6 +36,20 @@ export class EarthSphere extends Sphere{
             textureUrl: 'http://127.0.0.1:8080/textures/earth_texture.jpg'
         };
         super(gl, earthConfig);
+
+        const moonConfig: SphereConfig = {
+            radius: 0.2,
+            latitudeBands: 30,
+            longitudeBands: 30,
+            fieldOfView: 50,
+            aspect: window.innerWidth / window.innerHeight,
+            zNear: 0.1,
+            zFar: 1000.0,
+            textureUrl: 'http://127.0.0.1:8080/textures/moons/moon_texture.jpg'
+        };
+
+        const moon = new Moon(gl, moonConfig, 2.5, 0.01, 0.002);
+        this.addMoon(moon);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
