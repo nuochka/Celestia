@@ -1,5 +1,6 @@
 import { mat4 } from 'gl-matrix';
 import { createProgram } from '../utils/webgl-utils';
+import { Moon } from './moon';
 
 export interface SphereConfig {
     radius: number;          
@@ -20,6 +21,8 @@ export class Sphere {
     private indexBuffer: WebGLBuffer; 
     private texCoordBuffer: WebGLBuffer; 
     private texture?: WebGLTexture;
+
+    private moons: Moon[] = [];
 
     constructor(gl: WebGLRenderingContext, config: SphereConfig) {
         this.gl = gl;                     
@@ -204,9 +207,19 @@ export class Sphere {
         });
     }
 
+    public addMoon(moon: Moon): void {
+        this.moons.push(moon);
+    }
+
+    // Update sphere and its moons
+    public update(scale: number): void {
+        this.moons.forEach(moon => moon.update(scale));
+    }
+
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number, y: number, z: number, rotationAngle: number = 0, orbitalSpeed: number = 0, lightDirection: Float32Array, isSun: boolean) {
         if (!this.texture) return;
-    
+        this.moons.forEach(moon => moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance));
+        
         const gl = this.gl;
         const program = this.program;
         gl.useProgram(program);
