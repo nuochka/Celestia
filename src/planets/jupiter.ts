@@ -1,5 +1,6 @@
 import { Planet } from "../elements/planet";
 import { SphereConfig, Sphere } from "../elements/sphere";
+import { Moon } from "../elements/moon";
 
 export class Jupiter extends Planet {
 
@@ -35,6 +36,27 @@ export class JupiterSphere extends Sphere {
             textureUrl: 'http://127.0.0.1:8080/textures/jupiter_texture.jpg' 
         };
         super(gl, jupiterConfig);
+
+        this.createAndAddMoon(gl, 2.5, 0.03, 'http://127.0.0.1:8080/textures/moons/io_texture.jpg');
+        this.createAndAddMoon(gl, 4.5, 0.025, 'http://127.0.0.1:8080/textures/moons/europa_texture.jpg');
+        this.createAndAddMoon(gl, 6.5, 0.02, 'http://127.0.0.1:8080/textures/moons/ganymede_texture.jpg');
+        this.createAndAddMoon(gl, 8.5, 0.015, 'http://127.0.0.1:8080/textures/moons/callisto_texture.jpg');
+    }
+
+    private createAndAddMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string) {
+        const moonConfig: SphereConfig = {
+            radius: 0.1,
+            latitudeBands: 30,
+            longitudeBands: 30,
+            fieldOfView: 50,
+            aspect: window.innerWidth / window.innerHeight,
+            zNear: 0.1,
+            zFar: 1000.0,
+            textureUrl: textureUrl
+        };
+
+        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
+        super.addMoon(moon);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -52,3 +74,4 @@ export class JupiterSphere extends Sphere {
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
     }
 }
+
