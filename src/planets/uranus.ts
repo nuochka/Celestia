@@ -1,6 +1,7 @@
 import { Planet } from "../elements/planet";
-import { Sphere } from "../elements/sphere"
+import { Sphere, SphereConfig } from "../elements/sphere"
 import { Ring } from "../elements/ring"
+import { Moon } from "../elements/moon";
 
 export  const uranusConfig = {
     radius: 0.8,
@@ -58,6 +59,33 @@ export class UranusSphere extends Sphere {
              0, 
              true
         );
+
+        this.createAndAddMoon(gl, 3.0, 0.04, 'http://127.0.0.1:8080/textures/moons/miranda_texture.jpg');
+        this.createAndAddMoon(gl, 4.0, 0.03, 'http://127.0.0.1:8080/textures/moons/ariel_texture.jpg');
+        this.createAndAddMoon(gl, 5.0, 0.02, 'http://127.0.0.1:8080/textures/moons/umbriel_texture.jpg');
+        this.createAndAddMoon(gl, 8.5, 0.015, 'http://127.0.0.1:8080/textures/moons/titania_texture.jpg');
+        this.createAndAddMoon(gl, 10.5, 0.01, 'http://127.0.0.1:8080/textures/moons/oberon_texture.jpg');
+    }
+
+    private createAndAddMoon(
+        gl: WebGLRenderingContext,
+        orbitRadius: number,
+        orbitalSpeed: number,
+        textureUrl: string
+    ) {
+        const moonConfig: SphereConfig = {
+            radius: 0.1,
+            latitudeBands: 30,
+            longitudeBands: 30,
+            fieldOfView: 50,
+            aspect: window.innerWidth / window.innerHeight,
+            zNear: 0.1,
+            zFar: 1000.0,
+            textureUrl: textureUrl,
+        };
+
+        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
+        this.addMoon(moon);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
