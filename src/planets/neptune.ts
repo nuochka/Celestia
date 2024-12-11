@@ -1,5 +1,6 @@
 import { Planet } from "../elements/planet";
 import { SphereConfig, Sphere } from "../elements/sphere";
+import { Moon } from "../elements/moon"
 
 export class Neptune extends Planet{
 
@@ -32,9 +33,37 @@ export class NeptuneSphere extends Sphere{
             aspect: window.innerWidth / window.innerHeight,
             zNear: 0.1,
             zFar: 1000.0,
-            textureUrl: 'http://127.0.0.1:8080/textures/neptune_texture.jpg'
+            textureUrl: 'http://127.0.0.1:8080/textures/neptune_texture.jpg',
         };
         super(gl, neptuneConfig);
+
+        this.createAndAddMoon(
+            gl,
+            6,
+            0.02,
+            'http://127.0.0.1:8080/textures/moons/triton_texture.jpg'
+        );
+    }
+
+    private createAndAddMoon(
+        gl: WebGLRenderingContext,
+        orbitRadius: number,
+        orbitalSpeed: number,
+        textureUrl: string
+    ) {
+        const moonConfig: SphereConfig = {
+            radius: 0.2,
+            latitudeBands: 30,
+            longitudeBands: 30,
+            fieldOfView: 50,
+            aspect: window.innerWidth / window.innerHeight,
+            zNear: 0.1,
+            zFar: 1000.0,
+            textureUrl: textureUrl,
+        };
+
+        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
+        this.addMoon(moon);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
