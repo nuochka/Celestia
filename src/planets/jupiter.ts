@@ -20,13 +20,14 @@ export class Jupiter extends Planet {
 }
 
 export class JupiterSphere extends Sphere {
-    private orbitRadius: number = 0.0001;
+    private orbitRadius: number = 0.0001; 
     private angle: number = 0;
-    private angularSpeed: number = 0;
+    private angularSpeed: number = 0.005;
 
     constructor(gl: WebGLRenderingContext) {
+
         const jupiterConfig: SphereConfig = {
-            radius: 0.7, 
+            radius: 1.5,
             latitudeBands: 40,
             longitudeBands: 40,
             fieldOfView: 50,
@@ -36,16 +37,15 @@ export class JupiterSphere extends Sphere {
             textureUrl: 'http://127.0.0.1:8080/textures/jupiter_texture.jpg' 
         };
         super(gl, jupiterConfig);
-
-        this.createAndAddMoon(gl, 2.5, 0.03, 'http://127.0.0.1:8080/textures/moons/io_texture.jpg');
-        this.createAndAddMoon(gl, 4.5, 0.025, 'http://127.0.0.1:8080/textures/moons/europa_texture.jpg');
-        this.createAndAddMoon(gl, 6.5, 0.02, 'http://127.0.0.1:8080/textures/moons/ganymede_texture.jpg');
-        this.createAndAddMoon(gl, 8.5, 0.015, 'http://127.0.0.1:8080/textures/moons/callisto_texture.jpg');
+        this.createAndAddMoon(gl, 2.5, 0.020, 'http://127.0.0.1:8080/textures/moons/io_texture.jpg');
+        this.createAndAddMoon(gl, 4.5, 0.015, 'http://127.0.0.1:8080/textures/moons/europa_texture.jpg');
+        this.createAndAddMoon(gl, 6.5, 0.005, 'http://127.0.0.1:8080/textures/moons/ganymede_texture.jpg');
+        this.createAndAddMoon(gl, 8.5, 0.003, 'http://127.0.0.1:8080/textures/moons/callisto_texture.jpg');
     }
 
     private createAndAddMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string) {
         const moonConfig: SphereConfig = {
-            radius: 0.1,
+            radius: 0.2,
             latitudeBands: 30,
             longitudeBands: 30,
             fieldOfView: 50,
@@ -55,8 +55,16 @@ export class JupiterSphere extends Sphere {
             textureUrl: textureUrl
         };
 
-        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
-        super.addMoon(moon);
+        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);  
+        this.addMoon(moon);
+    }
+
+    setJupiterSpeeds(orbitSpeed: number, rotationSpeed: number) {
+        this.angularSpeed = orbitSpeed;
+
+        this.moons.forEach(moon => {
+            moon.setMoonSpeeds(this.angularSpeed * 0.5, rotationSpeed * 0.5);
+        });
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -72,6 +80,11 @@ export class JupiterSphere extends Sphere {
         lightDirection[2] /= length;
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
+
+        this.moons.forEach(moon => {
+            moon.update(1);
+            moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+        });
     }
 }
 
