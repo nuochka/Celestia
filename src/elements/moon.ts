@@ -1,8 +1,10 @@
 import { Sphere, SphereConfig } from "../elements/sphere";
+import { OrbitField } from "../elements/orbit";
 
 export class Moon {
     private gl: WebGLRenderingContext;
     private sphere: Sphere;
+    private orbitField: OrbitField;
 
     private orbitRadius: number;
     private orbitSpeed: number;
@@ -19,6 +21,15 @@ export class Moon {
 
         this.sphere = new Sphere(gl, config);
         this.sphere.loadTexture(config.textureUrl);
+
+        this.orbitField = new OrbitField(gl, {
+            radius: orbitRadius,
+            color: [0.68, 0.85, 0.90, 1.0],
+            fieldOfView: config.fieldOfView,
+            aspect: config.aspect,
+            zNear: config.zNear,
+            zFar: config.zFar,
+        });
     }
 
     public update(scale: number): void {
@@ -38,5 +49,11 @@ export class Moon {
         lightDirection[2] /= length;
 
         this.sphere.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.rotationAngle, this.orbitSpeed, lightDirection, false);
+
+        this.orbitField.render(cameraAngleX, cameraAngleY, cameraDistance);
+    }
+
+    public setOrbitVisible(visible: boolean): void {
+        this.orbitField.setVisible(visible);
     }
 }
