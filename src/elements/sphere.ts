@@ -22,7 +22,7 @@ export class Sphere {
     private texCoordBuffer: WebGLBuffer; 
     private texture?: WebGLTexture;
 
-    private moons: Moon[] = [];
+    protected moons: Moon[] = [];
 
     constructor(gl: WebGLRenderingContext, config: SphereConfig) {
         this.gl = gl;                     
