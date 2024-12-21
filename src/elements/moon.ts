@@ -32,6 +32,11 @@ export class Moon {
         });
     }
 
+    public setMoonSpeeds(orbitSpeed: number, rotationSpeed: number): void {
+        this.orbitSpeed = -orbitSpeed;
+        this.rotationSpeed = -rotationSpeed;
+    }
+
     public update(scale: number): void {
         this.angle = (this.angle + this.orbitSpeed * scale) % (2 * Math.PI);
         this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
