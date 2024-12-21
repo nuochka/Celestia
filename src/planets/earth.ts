@@ -22,7 +22,9 @@ export class Earth extends Planet{
 export class EarthSphere extends Sphere{
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
-    private angularSpeed: number = 0;
+    private angularSpeed: number = 0.01;
+    private rotationSpeed: number = 0.005;
+    private moon: Moon;
 
     constructor(gl: WebGLRenderingContext) {
         const earthConfig: SphereConfig = {
@@ -48,8 +50,14 @@ export class EarthSphere extends Sphere{
             textureUrl: 'http://127.0.0.1:8080/textures/moons/moon_texture.jpg'
         };
 
-        const moon = new Moon(gl, moonConfig, 2.5, 0.01, 0.002);
-        this.addMoon(moon);
+        this.moon = new Moon(gl, moonConfig, 2.5, this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
+    }
+
+    setEarthSpeeds(orbitSpeed: number, rotationSpeed: number) {
+        this.angularSpeed = orbitSpeed;
+        this.rotationSpeed = rotationSpeed;
+
+        this.moon.setMoonSpeeds(this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -65,5 +73,8 @@ export class EarthSphere extends Sphere{
         lightDirection[2] /= length;
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
+
+        this.moon.update(1);
+        this.moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
     }
 }
