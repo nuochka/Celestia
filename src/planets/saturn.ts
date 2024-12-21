@@ -31,7 +31,7 @@ const saturnSphereConfig = {
 export class SaturnSphere extends Sphere {
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
-    private angularSpeed: number = 0;
+    private angularSpeed: number = 0.005;
     private ring: Ring;
 
     constructor(gl: WebGLRenderingContext) {
@@ -57,18 +57,18 @@ export class SaturnSphere extends Sphere {
             this.orbitRadius
         );
 
-        this.createAndAddMoon(gl, 3.0, 0.025, 'http://127.0.0.1:8080/textures/moons/mimas_texture.jpg');
-        this.createAndAddMoon(gl, 4.0, 0.025, 'http://127.0.0.1:8080/textures/moons/enceladus_texture.jpg');
-        this.createAndAddMoon(gl, 5.0, 0.025, 'http://127.0.0.1:8080/textures/moons/tethys_texture.jpg');
-        this.createAndAddMoon(gl, 6.5, 0.015, 'http://127.0.0.1:8080/textures/moons/dione_texture.jpg');
-        this.createAndAddMoon(gl, 8.0, 0.02, 'http://127.0.0.1:8080/textures/moons/rhea_texture.jpg');
-        this.createAndAddMoon(gl, 11.5, 0.03, 'http://127.0.0.1:8080/textures/moons/titan_texture.jpg');
-        this.createAndAddMoon(gl, 13.5, 0.03, 'http://127.0.0.1:8080/textures/moons/hyperion_texture.jpg');
+        this.createAndAddMoon(gl, 3.0, 0.015, 'http://127.0.0.1:8080/textures/moons/mimas_texture.jpg');
+        this.createAndAddMoon(gl, 4.0, 0.014, 'http://127.0.0.1:8080/textures/moons/enceladus_texture.jpg');
+        this.createAndAddMoon(gl, 5.0, 0.013, 'http://127.0.0.1:8080/textures/moons/tethys_texture.jpg');
+        this.createAndAddMoon(gl, 6.5, 0.012, 'http://127.0.0.1:8080/textures/moons/dione_texture.jpg');
+        this.createAndAddMoon(gl, 8.0, 0.010, 'http://127.0.0.1:8080/textures/moons/rhea_texture.jpg');
+        this.createAndAddMoon(gl, 11.5, 0.005, 'http://127.0.0.1:8080/textures/moons/titan_texture.jpg');
+        this.createAndAddMoon(gl, 13.5, 0.003, 'http://127.0.0.1:8080/textures/moons/hyperion_texture.jpg');
     }
 
     private createAndAddMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string) {
         const moonConfig: SphereConfig = {
-            radius: 0.1,
+            radius: 0.15,
             latitudeBands: 30,
             longitudeBands: 30,
             fieldOfView: 50,
@@ -80,6 +80,14 @@ export class SaturnSphere extends Sphere {
 
         const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
         super.addMoon(moon);
+    }
+
+    setSaturnSpeeds(orbitSpeed: number, rotationSpeed: number) {
+        this.angularSpeed = orbitSpeed;
+
+        this.moons.forEach(moon => {
+            moon.setMoonSpeeds(this.angularSpeed * 0.5, rotationSpeed * 0.5);
+        });
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -96,5 +104,10 @@ export class SaturnSphere extends Sphere {
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
         this.ring.render(cameraAngleX, cameraAngleY, cameraDistance);
+
+        this.moons.forEach(moon => {
+            moon.update(1);
+            moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+        });
     }
 }
