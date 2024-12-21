@@ -31,7 +31,7 @@ const uranusSphereConfig = {
 export class UranusSphere extends Sphere {
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
-    private angularSpeed: number = 0;
+    private angularSpeed: number = 0.005;
     private ring: Ring;
     
     constructor(gl: WebGLRenderingContext) {
@@ -60,11 +60,11 @@ export class UranusSphere extends Sphere {
              true
         );
 
-        this.createAndAddMoon(gl, 3.0, 0.04, 'http://127.0.0.1:8080/textures/moons/miranda_texture.jpg');
-        this.createAndAddMoon(gl, 4.0, 0.03, 'http://127.0.0.1:8080/textures/moons/ariel_texture.jpg');
-        this.createAndAddMoon(gl, 5.0, 0.02, 'http://127.0.0.1:8080/textures/moons/umbriel_texture.jpg');
-        this.createAndAddMoon(gl, 8.5, 0.015, 'http://127.0.0.1:8080/textures/moons/titania_texture.jpg');
-        this.createAndAddMoon(gl, 10.5, 0.01, 'http://127.0.0.1:8080/textures/moons/oberon_texture.jpg');
+        this.createAndAddMoon(gl, 3.0, 0.015, 'http://127.0.0.1:8080/textures/moons/miranda_texture.jpg');
+        this.createAndAddMoon(gl, 4.0, 0.014, 'http://127.0.0.1:8080/textures/moons/ariel_texture.jpg');
+        this.createAndAddMoon(gl, 5.0, 0.010, 'http://127.0.0.1:8080/textures/moons/umbriel_texture.jpg');
+        this.createAndAddMoon(gl, 8.5, 0.005, 'http://127.0.0.1:8080/textures/moons/titania_texture.jpg');
+        this.createAndAddMoon(gl, 10.5, 0.003, 'http://127.0.0.1:8080/textures/moons/oberon_texture.jpg');
     }
 
     private createAndAddMoon(
@@ -88,6 +88,14 @@ export class UranusSphere extends Sphere {
         this.addMoon(moon);
     }
 
+    setUranusSpeeds(orbitSpeed: number, rotationSpeed: number) {
+        this.angularSpeed = orbitSpeed;
+
+        this.moons.forEach(moon => {
+            moon.setMoonSpeeds(this.angularSpeed * 0.5, rotationSpeed * 0.5);
+        });
+    }
+
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         this.angle += this.angularSpeed;
         const x = this.orbitRadius * Math.cos(this.angle);
@@ -102,5 +110,10 @@ export class UranusSphere extends Sphere {
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
         this.ring.render(cameraAngleX, cameraAngleY, cameraDistance);
+
+        this.moons.forEach(moon => {
+            moon.update(1);
+            moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+        });
     }
 }

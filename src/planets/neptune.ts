@@ -22,7 +22,9 @@ export class Neptune extends Planet{
 export class NeptuneSphere extends Sphere{
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
-    private angularSpeed: number = 0;
+    private angularSpeed: number = 0.01;
+    private moon: Moon;
+    private rotationSpeed: number = 0.005;
 
     constructor(gl: WebGLRenderingContext) {
         const neptuneConfig: SphereConfig = {
@@ -37,33 +39,25 @@ export class NeptuneSphere extends Sphere{
         };
         super(gl, neptuneConfig);
 
-        this.createAndAddMoon(
-            gl,
-            6,
-            0.02,
-            'http://127.0.0.1:8080/textures/moons/triton_texture.jpg'
-        );
-    }
-
-    private createAndAddMoon(
-        gl: WebGLRenderingContext,
-        orbitRadius: number,
-        orbitalSpeed: number,
-        textureUrl: string
-    ) {
         const moonConfig: SphereConfig = {
-            radius: 0.2,
+            radius: 0.15,
             latitudeBands: 30,
             longitudeBands: 30,
             fieldOfView: 50,
             aspect: window.innerWidth / window.innerHeight,
             zNear: 0.1,
             zFar: 1000.0,
-            textureUrl: textureUrl,
+            textureUrl: 'http://127.0.0.1:8080/textures/moons/triton_texture.jpg'
         };
+        this.moon = new Moon(gl, moonConfig, 2.5, this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
+    }
 
-        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
-        this.addMoon(moon);
+
+    setNeptuneSpeeds(orbitSpeed: number, rotationSpeed: number) {
+        this.angularSpeed = orbitSpeed;
+        this.rotationSpeed = rotationSpeed;
+
+        this.moon.setMoonSpeeds(this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
@@ -79,6 +73,9 @@ export class NeptuneSphere extends Sphere{
         lightDirection[2] /= length;
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
+
+        this.moon.update(1);
+        this.moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
     }
 }
 
