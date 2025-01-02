@@ -43,6 +43,13 @@ button:active {
     z-index: 1;
 }
 
+#toggle-motion-planet {
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+    z-index: 1;
+}
+
 #toggleGridButton {
     position: absolute;
     top: 70px;
