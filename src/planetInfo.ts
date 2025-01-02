@@ -9,6 +9,16 @@ import { NeptuneSphere } from './planets/neptune';
 import { PlutoSphere } from './planets/pluto';
 import { StarField, StarFieldConfig } from './elements/stars';
 
+interface MoonInfo {
+    name: string;
+    description: string;
+    diameter: string;
+    distanceFromPlanet: string;
+    surface: string;
+    composition: string;
+    temperature: string;
+  }
+
 interface PlanetInfo {
     name: string;
     description: string;
@@ -28,6 +38,8 @@ interface PlanetInfo {
     surfaceGravity: string;
     surfaceTemperature: string;
     detailedSurface: string;
+
+    moonsInfo: MoonInfo[];
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -123,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "Cratered, rocky surface",
             temperature: "Day: 430°C, Night: -180°C",
             composition: "Rocky, metallic core",
-
             equatorialDiameter: "4,880 km",
             mass: "3.3011 × 10^23 kg",
             meanDistanceFromSun: "57.91 million km",
@@ -131,7 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "88 Earth days",
             surfaceGravity: "3.7 m/s²",
             surfaceTemperature: "Day: 430°C, Night: -180°C",
-            detailedSurface: "Mercury's surface is covered with impact craters, similar to the Moon. It lacks a significant atmosphere, which means there is no weathering or erosion."
+            detailedSurface: "Mercury's surface is covered with impact craters, similar to the Moon. It lacks a significant atmosphere, which means there is no weathering or erosion.",
+            moonsInfo: []
         },
         venus: {
             name: "Venus",
@@ -143,7 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "Volcanic plains, mountains, and craters",
             temperature: "467°C (constant)",
             composition: "Rocky, thick atmosphere",
-
             equatorialDiameter: "12,104 km",
             mass: "4.867 × 10^24 kg",
             meanDistanceFromSun: "108.2 million km",
@@ -151,7 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "225 Earth days",
             surfaceGravity: "8.87 m/s²",
             surfaceTemperature: "467°C (constant)",
-            detailedSurface: "Venus' surface is rocky, with large volcanic plains and impact craters. Due to the thick cloud cover, it's almost impossible to see the surface directly from space."
+            detailedSurface: "Venus' surface is rocky, with large volcanic plains and impact craters. Due to the thick cloud cover, it's almost impossible to see the surface directly from space.",
+            moonsInfo: []
         },
         earth: {
             name: "Earth",
@@ -163,7 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "70% water, 30% land (mountains, oceans, deserts, forests)",
             temperature: "Average: 15°C",
             composition: "Rocky, liquid water",
-
             equatorialDiameter: "12,742 km",
             mass: "5.972 × 10^24 kg",
             meanDistanceFromSun: "149.6 million km",
@@ -171,7 +182,18 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "365.25 days",
             surfaceGravity: "9.81 m/s²",
             surfaceTemperature: "Average: 15°C",
-            detailedSurface: "Earth has diverse landscapes, including oceans, mountains, deserts, forests, and tundra. It is the only planet known to support life, thanks to liquid water and a stable climate."
+            detailedSurface: "Earth has diverse landscapes, including oceans, mountains, deserts, forests, and tundra. It is the only planet known to support life, thanks to liquid water and a stable climate.",
+            moonsInfo: [
+                {
+                    name: "Moon",
+                    description: "Earth's only natural satellite. The Moon influences Earth’s tides and stabilizes its axial tilt.",
+                    diameter: "3,474.8 km",
+                    distanceFromPlanet: "384,400 km",
+                    surface: "Rocky surface with maria (dark plains) and highlands",
+                    composition: "Rocky, with a small iron core",
+                    temperature: "Day: 127°C, Night: -173°C"
+                }
+            ]
         },
         mars: {
             name: "Mars",
@@ -183,7 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "Red, rocky surface with dust storms and large volcanoes",
             temperature: "Average: -60°C",
             composition: "Rocky, iron oxide surface",
-
             equatorialDiameter: "6,779 km",
             mass: "6.4171 × 10^23 kg",
             meanDistanceFromSun: "227.9 million km",
@@ -191,7 +212,27 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "687 Earth days",
             surfaceGravity: "3.71 m/s²",
             surfaceTemperature: "Average: -60°C",
-            detailedSurface: "Mars has a dry, rocky surface with large dust storms, volcanoes like Olympus Mons (the largest volcano in the solar system), and the Valles Marineris canyon system."
+            detailedSurface: "Mars has a dry, rocky surface with large dust storms, volcanoes like Olympus Mons (the largest volcano in the solar system), and the Valles Marineris canyon system.",
+            moonsInfo: [
+                {
+                    name: "Phobos",
+                    description: "Mars' larger moon, Phobos, is slowly spiraling inward towards the planet and is expected to eventually crash into Mars or break apart.",
+                    diameter: "22.4 km",
+                    distanceFromPlanet: "9,377 km",
+                    surface: "Rocky, heavily cratered surface",
+                    composition: "Rocky with some ice",
+                    temperature: "Day: -4°C, Night: -112°C"
+                },
+                {
+                    name: "Deimos",
+                    description: "The smaller of Mars' two moons. Deimos is a tiny moon that orbits Mars in a nearly circular path.",
+                    diameter: "12.4 km",
+                    distanceFromPlanet: "23,460 km",
+                    surface: "Rocky surface with small craters",
+                    composition: "Rocky, with low density",
+                    temperature: "Day: -5°C, Night: -125°C"
+                }
+            ]
         },
         jupiter: {
             name: "Jupiter",
@@ -203,7 +244,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "No solid surface, gas layers and storm systems (Great Red Spot)",
             temperature: "Average: -108°C",
             composition: "Gas giant, hydrogen and helium",
-            
             equatorialDiameter: "139,820 km",
             mass: "1.898 × 10^27 kg",
             meanDistanceFromSun: "778.3 million km",
@@ -211,7 +251,45 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "11.86 Earth years",
             surfaceGravity: "24.79 m/s²",
             surfaceTemperature: "Average: -108°C",
-            detailedSurface: "Jupiter does not have a solid surface. Its atmosphere is mostly hydrogen and helium, and its lower layers are composed of metallic hydrogen and other gases. It has violent storms, including the Great Red Spot."
+            detailedSurface: "Jupiter does not have a solid surface. Its atmosphere is mostly hydrogen and helium, and its lower layers are composed of metallic hydrogen and other gases. It has violent storms, including the Great Red Spot.",
+            moonsInfo: [
+                {
+                    name: "Io",
+                    description: "Io is the most volcanically active body in the Solar System, with hundreds of volcanoes, some of which erupt with lava fountains.",
+                    diameter: "3,643.2 km",
+                    distanceFromPlanet: "421,700 km",
+                    surface: "Volcanic surface with active volcanoes",
+                    composition: "Rocky, with a sulfur-rich surface",
+                    temperature: "Day: 130°C, Night: -143°C"
+                },
+                {
+                    name: "Europa",
+                    description: "Europa is covered in ice and likely has an ocean beneath its icy crust. It is one of the best candidates for finding life beyond Earth.",
+                    diameter: "3,121.6 km",
+                    distanceFromPlanet: "670,900 km",
+                    surface: "Smooth, icy surface with cracks",
+                    composition: "Icy, rocky core",
+                    temperature: "Day: -160°C, Night: -220°C"
+                },
+                {
+                    name: "Ganymede",
+                    description: "Ganymede is the largest moon in the Solar System and has its own magnetic field.",
+                    diameter: "5,268 km",
+                    distanceFromPlanet: "1,070,400 km",
+                    surface: "Rocky, icy surface with grooves and ridges",
+                    composition: "Icy, rocky",
+                    temperature: "Day: -100°C, Night: -160°C"
+                },
+                {
+                    name: "Callisto",
+                    description: "Callisto is heavily cratered, and its surface is made of a mixture of rock and water ice.",
+                    diameter: "4,820.6 km",
+                    distanceFromPlanet: "1,882,700 km",
+                    surface: "Icy surface with craters",
+                    composition: "Rocky and icy",
+                    temperature: "Day: -139°C, Night: -193°C"
+                }
+            ]
         },
         saturn: {
             name: "Saturn",
@@ -223,7 +301,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "No solid surface, gas layers and ring system",
             temperature: "Average: -139°C",
             composition: "Gas giant, hydrogen and helium",
-            
             equatorialDiameter: "116,460 km",
             mass: "5.683 × 10^26 kg",
             meanDistanceFromSun: "1.43 billion km",
@@ -231,7 +308,72 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "29.5 Earth years",
             surfaceGravity: "10.44 m/s²",
             surfaceTemperature: "Average: -139°C",
-            detailedSurface: "Saturn's surface is made up of thick layers of gas, and there is no solid ground. The planet has a well-known ring system made of ice and rock particles."
+            detailedSurface: "Saturn's surface is made up of thick layers of gas, and there is no solid ground. The planet has a well-known ring system made of ice and rock particles.",
+            moonsInfo: [
+                {
+                    name: "Mimas",
+                    description: "Mimas is the smallest of Saturn's moons with a noticeable crater named Herschel. It is often compared to the Death Star due to its appearance.",
+                    diameter: "396 km",
+                    distanceFromPlanet: "185,000 km",
+                    surface: "Icy surface with a large crater",
+                    composition: "Icy",
+                    temperature: "-201°C"
+                },
+                {
+                    name: "Enceladus",
+                    description: "Enceladus is a moon that has geysers ejecting water vapor from its surface, indicating the presence of an underground ocean.",
+                    diameter: "504 km",
+                    distanceFromPlanet: "238,000 km",
+                    surface: "Icy surface with cryovolcanic activity",
+                    composition: "Icy",
+                    temperature: "-201°C"
+                },
+                {
+                    name: "Tethys",
+                    description: "Tethys is a large icy moon of Saturn, known for its large impact crater, Odysseus, and a huge valley named Ithaca Chasma.",
+                    diameter: "1,062 km",
+                    distanceFromPlanet: "294,660 km",
+                    surface: "Icy surface with craters and valleys",
+                    composition: "Icy",
+                    temperature: "-220°C"
+                },
+                {
+                    name: "Dione",
+                    description: "Dione is an icy moon of Saturn that has both bright, icy terrain and older, heavily cratered regions. It shows signs of tectonic activity.",
+                    diameter: "1,123 km",
+                    distanceFromPlanet: "377,400 km",
+                    surface: "Icy surface with craters and fractures",
+                    composition: "Icy",
+                    temperature: "-195°C"
+                },
+                {
+                    name: "Rhea",
+                    description: "Rhea is Saturn's second-largest moon. It has a heavily cratered surface and is made mostly of water ice with a small rocky core.",
+                    diameter: "1,527 km",
+                    distanceFromPlanet: "527,000 km",
+                    surface: "Icy surface with craters",
+                    composition: "Icy and rocky",
+                    temperature: "-217°C"
+                },
+                {
+                    name: "Titan",
+                    description: "Titan is Saturn's largest moon and the second-largest moon in the Solar System. It has a thick atmosphere and surface lakes of liquid methane.",
+                    diameter: "5,151.8 km",
+                    distanceFromPlanet: "1,222,000 km",
+                    surface: "Rocky and icy surface with methane lakes",
+                    composition: "Icy, rocky",
+                    temperature: "Day: -179°C, Night: -289°C"
+                },
+                {
+                    name: "Hyperion",
+                    description: "Hyperion is an irregularly shaped moon with a sponge-like appearance. It has an unstable rotation and is one of Saturn's smaller moons.",
+                    diameter: "270 km",
+                    distanceFromPlanet: "1,482,000 km",
+                    surface: "Porous surface with a spongy texture",
+                    composition: "Icy, rocky",
+                    temperature: "-220°C"
+                }
+            ]
         },
         uranus: {
             name: "Uranus",
@@ -243,7 +385,6 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "No solid surface, icy and gaseous layers",
             temperature: "Average: -197°C",
             composition: "Ice giant, methane and ammonia",
-            
             equatorialDiameter: "50,724 km",
             mass: "8.681 × 10^25 kg",
             meanDistanceFromSun: "2.87 billion km",
@@ -251,7 +392,54 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "84 Earth years",
             surfaceGravity: "8.69 m/s²",
             surfaceTemperature: "Average: -197°C",
-            detailedSurface: "Uranus does not have a solid surface, and its icy and gaseous layers are composed mostly of water, ammonia, and methane. It is a cold planet with strong winds and extreme seasons."
+            detailedSurface: "Uranus does not have a solid surface, and its icy and gaseous layers are composed mostly of water, ammonia, and methane. It is a cold planet with strong winds and extreme seasons.",
+            moonsInfo: [
+                {
+                    name: "Miranda",
+                    description: "Miranda is the smallest and innermost of Uranus' five major moons. It has a diverse surface with valleys, ridges, and large fault canyons.",
+                    diameter: "471.6 km",
+                    distanceFromPlanet: "129,000 km",
+                    surface: "Icy and rocky surface with canyons and cliffs",
+                    composition: "Icy, rocky",
+                    temperature: "-197°C"
+                },
+                {
+                    name: "Ariel",
+                    description: "Ariel is one of Uranus' largest moons, known for its bright surface and many craters, valleys, and ridges. It is believed to have had a geologically active past.",
+                    diameter: "1,158.8 km",
+                    distanceFromPlanet: "191,000 km",
+                    surface: "Icy surface with extensive rift valleys and craters",
+                    composition: "Icy, rocky",
+                    temperature: "-224°C"
+                },
+                {
+                    name: "Umbriel",
+                    description: "Umbriel is one of Uranus' larger moons, with a dark surface that is heavily cratered. It has a less active surface compared to Ariel.",
+                    diameter: "1,170 km",
+                    distanceFromPlanet: "266,000 km",
+                    surface: "Dark, heavily cratered surface",
+                    composition: "Icy, rocky",
+                    temperature: "-224°C"
+                },
+                {
+                    name: "Titania",
+                    description: "Titania is Uranus' largest moon. It has a surface covered by a mixture of ice and rock with large canyons and ancient craters.",
+                    diameter: "1,578.8 km",
+                    distanceFromPlanet: "436,000 km",
+                    surface: "Icy surface with canyons and large craters",
+                    composition: "Icy, rocky",
+                    temperature: "-224°C"
+                },
+                {
+                    name: "Oberon",
+                    description: "Oberon is Uranus' second-largest moon and is known for its large craters and its icy and rocky surface. It has a heavily cratered surface and is thought to have a small amount of internal heat.",
+                    diameter: "1,523.4 km",
+                    distanceFromPlanet: "583,500 km",
+                    surface: "Icy surface with large craters",
+                    composition: "Icy, rocky",
+                    temperature: "-224°C"
+                }
+            ]
         },
         neptune: {
             name: "Neptune",
@@ -263,15 +451,25 @@ document.addEventListener("DOMContentLoaded", () => {
             surface: "No solid surface, icy and gaseous layers",
             temperature: "Average: -214°C",
             composition: "Ice giant, methane atmosphere",
-
             equatorialDiameter: "49,244 km",
             mass: "1.024 × 10^26 kg",
             meanDistanceFromSun: "4.5 billion km",
-            rotationPeriod: "16 hours",
+            rotationPeriod: "16.1 hours",
             orbitalPeriod: "164.8 Earth years",
             surfaceGravity: "11.15 m/s²",
             surfaceTemperature: "Average: -214°C",
-            detailedSurface: "Neptune has no solid surface, and it is composed mainly of hydrogen, helium, and methane. Its deep blue color is a result of methane in its atmosphere."
+            detailedSurface: "Neptune has no solid surface, and its atmosphere consists mostly of hydrogen, helium, and methane. It has very strong winds and a turbulent atmosphere.",
+            moonsInfo: [
+                {
+                    name: "Triton",
+                    description: "Triton is Neptune’s largest moon and has geysers that eject nitrogen gas. It has a retrograde orbit, which suggests it was captured by Neptune's gravity.",
+                    diameter: "2,710 km",
+                    distanceFromPlanet: "354,800 km",
+                    surface: "Icy surface with geysers",
+                    composition: "Icy, rocky core",
+                    temperature: "Day: -235°C, Night: -235°C"
+                }
+            ]
         },
         pluto: {
             name: "Pluto",
@@ -291,10 +489,18 @@ document.addEventListener("DOMContentLoaded", () => {
             orbitalPeriod: "248 Earth years",
             surfaceGravity: "0.62 m/s²",
             surfaceTemperature: "Average: -229°C",
-            detailedSurface: "Pluto's surface is composed of nitrogen and methane ice, with vast plains and mountain ranges. It has an unusual heart-shaped glacier known as Sputnik Planitia. The surface features are diverse and complex, showing evidence of past geological activity."   
+            detailedSurface: "Pluto's surface is composed of nitrogen and methane ice, with vast plains and mountain ranges. It has an unusual heart-shaped glacier known as Sputnik Planitia. The surface features are diverse and complex, showing evidence of past geological activity.", 
+            moonsInfo: []
         }
-    };
-    
+    };    
+    function switchPlanet(planetName: string) {
+        if (planetSwitchers[planetName]) {
+            currentPlanet = planetSwitchers[planetName];
+            updatePlanetInfo(planetName);
+            render();
+        }
+    }
+
 
     function updatePlanetInfo(planetName: string) {
         const planetInfo = planetInfoData[planetName];
@@ -316,19 +522,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p><strong>Surface:</strong> ${planetInfo.surface}</p>
                 <p><strong>Detailed Surface:</strong> ${planetInfo.detailedSurface}</p>
                 <p><strong>Composition:</strong> ${planetInfo.composition}</p>
+                <h3>Moons:</h3>
+                ${planetInfo.moonsInfo && planetInfo.moonsInfo.length > 0 
+                    ? planetInfo.moonsInfo.map(moon => `
+                        <br><strong>${moon.name}</strong>: ${moon.description}
+                        <br><strong>Diameter:</strong> ${moon.diameter}
+                        <br><strong>Distance from Planet:</strong> ${moon.distanceFromPlanet}
+                        <br><strong>Surface:</strong> ${moon.surface}
+                        <br><strong>Composition:</strong> ${moon.composition}
+                        <br><strong>Temperature:</strong> ${moon.temperature}
+                        <br><br>
+                    `).join('')
+                    : '<p>No moons</p>'}
             `;
         } else {
             infoContent.innerHTML = `<p>Information not available</p>`;
         }
-    }
-
-    function switchPlanet(planetName: string) {
-        if (planetSwitchers[planetName]) {
-            currentPlanet = planetSwitchers[planetName];
-            updatePlanetInfo(planetName);
-            render();
-        }
-    }
+    }    
 
     const starField = new StarField(gl, starConfig);
 
