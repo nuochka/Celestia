@@ -26,6 +26,8 @@ export class EarthSphere extends Sphere{
     private rotationSpeed: number = 0.005;
     private moon: Moon;
 
+    private paused: boolean = false;
+
     constructor(gl: WebGLRenderingContext) {
         const earthConfig: SphereConfig = {
             radius: 0.6,
@@ -60,8 +62,15 @@ export class EarthSphere extends Sphere{
         this.moon.setMoonSpeeds(this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
     }
 
+    togglePause() {
+        this.paused = !this.paused;
+    }
+
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
-        this.angle += this.angularSpeed;
+        if (!this.paused) {
+            this.angle += this.angularSpeed;
+        }
+        
         const x = this.orbitRadius * Math.cos(this.angle);
         const y = 0;
         const z = this.orbitRadius * Math.sin(this.angle);
@@ -74,7 +83,10 @@ export class EarthSphere extends Sphere{
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
 
-        this.moon.update(1);
+        if (!this.paused) {
+            this.moon.update(1);
+        }
+        
         this.moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
     }
 }

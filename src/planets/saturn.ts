@@ -33,6 +33,7 @@ export class SaturnSphere extends Sphere {
     private angle: number = 0;
     private angularSpeed: number = 0.005;
     private ring: Ring;
+    private paused: boolean = false;
 
     constructor(gl: WebGLRenderingContext) {
         super(gl, saturnSphereConfig);
@@ -90,8 +91,15 @@ export class SaturnSphere extends Sphere {
         });
     }
 
+    togglePause() {
+        this.paused = !this.paused;
+    }
+
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
-        this.angle += this.angularSpeed;
+        if (!this.paused) {
+            this.angle += this.angularSpeed;
+        }
+
         const x = this.orbitRadius * Math.cos(this.angle);
         const y = 0;
         const z = this.orbitRadius * Math.sin(this.angle);
@@ -105,9 +113,11 @@ export class SaturnSphere extends Sphere {
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
         this.ring.render(cameraAngleX, cameraAngleY, cameraDistance);
 
-        this.moons.forEach(moon => {
-            moon.update(1);
-            moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
-        });
+        if (!this.paused) {
+            this.moons.forEach(moon => {
+                moon.update(1);
+                moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+            });
+        }
     }
 }

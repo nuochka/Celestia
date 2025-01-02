@@ -391,4 +391,29 @@ document.addEventListener("DOMContentLoaded", () => {
             toggleSidebarButton.style.left = "442px";
         }
     });
+
+    let paused = false;
+    const toggleButton = document.getElementById("toggle-motion-planet") as HTMLButtonElement;
+
+    toggleButton.addEventListener('click', () => {
+        paused = !paused;
+        toggleButton.textContent = paused ? 'Resume' : 'Pause';
+
+        if (currentPlanet && currentPlanet instanceof SaturnSphere) {
+            currentPlanet.togglePause();
+        }
+        if (currentPlanet && currentPlanet instanceof EarthSphere) {
+            currentPlanet.togglePause();
+        }
+        if (currentPlanet && currentPlanet instanceof JupiterSphere) {
+            currentPlanet.togglePause();
+        }
+        if (currentPlanet && currentPlanet instanceof UranusSphere) {
+            currentPlanet.togglePause();
+        }
+        if (currentPlanet && currentPlanet instanceof NeptuneSphere) {
+            currentPlanet.togglePause();
+        }
+    });
+    
 });

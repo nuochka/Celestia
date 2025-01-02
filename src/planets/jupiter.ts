@@ -23,6 +23,7 @@ export class JupiterSphere extends Sphere {
     private orbitRadius: number = 0.0001; 
     private angle: number = 0;
     private angularSpeed: number = 0.005;
+    private paused: boolean = false;
 
     constructor(gl: WebGLRenderingContext) {
 
@@ -67,8 +68,15 @@ export class JupiterSphere extends Sphere {
         });
     }
 
+    togglePause() {
+        this.paused = !this.paused;
+    }
+
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
-        this.angle += this.angularSpeed;
+        if (!this.paused) {
+            this.angle += this.angularSpeed;
+        }
+
         const x = this.orbitRadius * Math.cos(this.angle);
         const y = 0;
         const z = this.orbitRadius * Math.sin(this.angle);
@@ -81,10 +89,12 @@ export class JupiterSphere extends Sphere {
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
 
-        this.moons.forEach(moon => {
-            moon.update(1);
-            moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
-        });
+        if (!this.paused) {
+            this.moons.forEach(moon => {
+                moon.update(1);
+                moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+            });
+        }
     }
 }
 
