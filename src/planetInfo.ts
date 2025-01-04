@@ -624,6 +624,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentPlanet && currentPlanet instanceof NeptuneSphere) {
             currentPlanet.togglePause();
         }
+        if(currentPlanet && currentPlanet instanceof MarsSphere){
+            currentPlanet.togglePause();
+        }
     });
     
 });
