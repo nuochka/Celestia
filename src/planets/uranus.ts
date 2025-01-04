@@ -61,6 +61,7 @@ export class UranusSphere extends Sphere {
              true
         );
 
+        this.addAsteroidMoon(gl, 2.0, 0.016, 'http://127.0.0.1:8080/textures/moons/puck_texture.jpg'); 
         this.createAndAddMoon(gl, 3.0, 0.015, 'http://127.0.0.1:8080/textures/moons/miranda_texture.jpg');
         this.createAndAddMoon(gl, 4.0, 0.014, 'http://127.0.0.1:8080/textures/moons/ariel_texture.jpg');
         this.createAndAddMoon(gl, 5.0, 0.010, 'http://127.0.0.1:8080/textures/moons/umbriel_texture.jpg');
@@ -125,5 +126,12 @@ export class UranusSphere extends Sphere {
                 moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
             });
         }
+
+        this.asteroidMoons.forEach(asteroid => {
+            if(!this.paused){
+                asteroid.update(1);
+            }
+            asteroid.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+        });
     }
 }
