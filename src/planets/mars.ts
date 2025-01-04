@@ -22,6 +22,7 @@ export class MarsSphere extends Sphere{
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
     private angularSpeed: number = 0;
+    private paused: boolean = false;
 
     constructor(gl: WebGLRenderingContext) {
         const marsConfig: SphereConfig = {
@@ -35,9 +36,19 @@ export class MarsSphere extends Sphere{
             textureUrl: 'http://127.0.0.1:8080/textures/mars_texture.jpg'
         };
         super(gl, marsConfig);
+        this.addAsteroidMoon(gl, 1.5, 0.005, 'http://127.0.0.1:8080/textures/moons/phobos_texture.jpg');
+        this.addAsteroidMoon(gl, 3, 0.003, 'http://127.0.0.1:8080/textures/moons/deimos_texture.jpg'); 
+    }
+
+    togglePause() {
+        this.paused = !this.paused;
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
+        if (!this.paused) {
+            this.angle += this.angularSpeed;
+        }
+
         this.angle += this.angularSpeed;
         const x = this.orbitRadius * Math.cos(this.angle);
         const y = 0;
@@ -50,5 +61,12 @@ export class MarsSphere extends Sphere{
         lightDirection[2] /= length;
 
         super.render(cameraAngleX, cameraAngleY, cameraDistance, x, y, z, this.angle, 0, lightDirection, false);
+
+            this.asteroidMoons.forEach(asteroid => {
+                if(!this.paused){
+                    asteroid.update(1);
+                }
+                asteroid.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+            });
+        }
     }
-}
