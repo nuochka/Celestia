@@ -1,6 +1,7 @@
 import { mat4 } from 'gl-matrix';
 import { createProgram } from '../utils/webgl-utils';
 import { Moon } from './moon';
+import { AsteroidMoon, AsteroidConfig } from './asteroid';
 
 export interface SphereConfig {
     radius: number;          
@@ -23,6 +24,7 @@ export class Sphere {
     private texture?: WebGLTexture;
 
     protected moons: Moon[] = [];
+    protected asteroidMoons: AsteroidMoon[] = [];
 
     constructor(gl: WebGLRenderingContext, config: SphereConfig) {
         this.gl = gl;                     
@@ -287,4 +289,24 @@ export class Sphere {
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         this.gl.drawElements(this.gl.TRIANGLES, 6 * this.config.latitudeBands * this.config.longitudeBands, this.gl.UNSIGNED_SHORT, 0);
     } 
+
+
+    public addAsteroidMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string): void {
+        const moonConfig: AsteroidConfig = {
+            radius: 0.05,
+            xScale: 1.2,
+            zScale: 1.2,
+            latitudeBands: 40,
+            longitudeBands: 40,
+            fieldOfView: 50,
+            aspect: window.innerWidth / window.innerHeight,
+            zNear: 0.1,
+            zFar: 1000.0,
+            textureUrl: textureUrl,
+            roughness: 0.002,
+        };
+
+        const asteroid = new AsteroidMoon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
+        this.asteroidMoons.push(asteroid);
+    }
 }
