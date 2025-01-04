@@ -477,6 +477,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     surface: "Icy surface with geysers",
                     composition: "Icy, rocky core",
                     temperature: "Day: -235°C, Night: -235°C"
+                },
+                {
+                    name: "Proteus",
+                    description: "Proteus is Neptune's second-largest moon and is irregularly shaped. It is heavily cratered and very dark.",
+                    diameter: "418 km",
+                    distanceFromPlanet: "117,600 km",
+                    surface: "Highly irregular, heavily cratered",
+                    composition: "Icy, rocky",
+                    temperature: "-220°C"
                 }
             ]
         },

@@ -51,7 +51,8 @@ export class NeptuneSphere extends Sphere{
             zFar: 1000.0,
             textureUrl: 'http://127.0.0.1:8080/textures/moons/triton_texture.jpg'
         };
-        this.moon = new Moon(gl, moonConfig, 2.5, this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
+        this.moon = new Moon(gl, moonConfig, 4.5, this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
+        this.addAsteroidMoon(gl, 2.0, 0.003, 'http://127.0.0.1:8080/textures/moons/proteus_texture.jpg'); 
     }
 
 
@@ -84,6 +85,13 @@ export class NeptuneSphere extends Sphere{
             this.moon.update(1);
         }
         this.moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+
+        this.asteroidMoons.forEach(asteroid => {
+            if(!this.paused){
+                asteroid.update(1);
+            }
+            asteroid.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance);
+        });
     }
 }
 
