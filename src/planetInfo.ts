@@ -395,6 +395,15 @@ document.addEventListener("DOMContentLoaded", () => {
             detailedSurface: "Uranus does not have a solid surface, and its icy and gaseous layers are composed mostly of water, ammonia, and methane. It is a cold planet with strong winds and extreme seasons.",
             moonsInfo: [
                 {
+                    name: "Puck",
+                    description: "Puck is one of Uranus' smaller moons. It has a heavily cratered surface and is thought to be a captured asteroid. Its irregular shape and small size distinguish it from the larger moons of Uranus.",
+                    diameter: "162.4 km",
+                    distanceFromPlanet: "151,500 km",
+                    surface: "Heavily cratered and irregular",
+                    composition: "Icy, rocky",
+                    temperature: "-223°C"
+                },
+                {
                     name: "Miranda",
                     description: "Miranda is the smallest and innermost of Uranus' five major moons. It has a diverse surface with valleys, ridges, and large fault canyons.",
                     diameter: "471.6 km",
