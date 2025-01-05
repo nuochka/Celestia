@@ -8,6 +8,11 @@ let lastMouseX = 0;
 let lastMouseY = 0;
 let isMouseDown = false;
 
+export function playSound(soundUrl: string) {
+    const audio = new Audio(soundUrl);
+    audio.play();
+}
+
 export function setupEventListeners(canvas: HTMLCanvasElement) {
     canvas.addEventListener('mousedown', (event) => {
         isMouseDown = true;
@@ -41,6 +46,8 @@ export function setupEventListeners(canvas: HTMLCanvasElement) {
 
 export function togglePause(toggleButton: HTMLElement) {
     toggleButton.addEventListener('click', () => {
+        playSound('http://127.0.0.1:8080/sounds/click.mp3');
+        
         paused = !paused;
         toggleButton.textContent = paused ? 'Resume' : 'Pause';
     });
@@ -59,11 +66,12 @@ if (scaleSlider) {
     console.error('Scale slider not found');
 }
 
-
 const togglePlanetMenuButton = document.getElementById("togglePlanetMenuButton") as HTMLButtonElement;
 const planetList = document.getElementById("planetList") as HTMLUListElement;
 
 togglePlanetMenuButton.addEventListener("click", () => {
+    playSound('http://127.0.0.1:8080/sounds/click_2.mp3');
+    
     if (planetList.classList.contains("hidden")) {
         planetList.classList.remove("hidden");
         planetList.classList.add("expanded");
@@ -74,8 +82,6 @@ togglePlanetMenuButton.addEventListener("click", () => {
         togglePlanetMenuButton.textContent = "Show Planets";
     }
 });
-
-
 
 export function updateScene(objects: any) {
     if (!paused) {
@@ -95,6 +101,47 @@ export function updateScene(objects: any) {
         objects.kuiperBelt.update(-0.003 * scale);
     }
 }
+
+let audio: HTMLAudioElement | null = null;
+
+function playBackgroundSound(soundUrl: string) {
+    if (audio && !audio.paused) return;
+
+    audio = new Audio(soundUrl);
+    audio.loop = true;
+    audio.volume = 0.1;
+    audio.muted = false;
+
+    audio.play().catch((error) => {
+        console.error("Error playing background sound:", error);
+    });
+}
+
+function toggleMusic() {
+    const button = document.getElementById('start-music') as HTMLButtonElement;
+
+    if (audio) {
+        playSound('http://127.0.0.1:8080/sounds/click.mp3');
+        if (audio.paused) {
+            audio.play().catch((error) => {
+                console.error("Error starting background music:", error);
+            });
+            if (button) button.textContent = 'Stop Music';
+            console.log('Music started');
+        } else {
+            audio.pause();
+            if (button) button.textContent = 'Play Music';
+        }
+    }
+}
+
+window.addEventListener('load', () => {
+    playBackgroundSound('http://127.0.0.1:8080/sounds/background.mp3');
+});
+
+document.getElementById('start-music')?.addEventListener('click', () => {
+    toggleMusic();
+});
 
 export function renderScene(gl: WebGLRenderingContext, objects: any, cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);

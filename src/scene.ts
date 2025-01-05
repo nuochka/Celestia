@@ -12,6 +12,7 @@ import { Neptune } from "./planets/neptune";
 import { Pluto } from "./planets/pluto";
 import { AsteroidBelt } from "./elements/asteroidBelt";
 import { Ring } from "./elements/ring";
+import { playSound } from "./animation";
 
 export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasElement) {
     const starConfig: StarFieldConfig = {
@@ -45,6 +46,7 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
     const toggleGridButton = document.getElementById("toggleGridButton") as HTMLButtonElement;
 
     toggleGridButton.addEventListener("click", () => {
+        playSound('http://127.0.0.1:8080/sounds/click.mp3');
         const isGridVisible = gridField.getIsVisible();
 
         gridField.setVisible(!isGridVisible);
@@ -88,6 +90,7 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
     const toggleOrbitButton = document.getElementById("toggleOrbitButton") as HTMLButtonElement;
 
     toggleOrbitButton.addEventListener("click", () => {
+        playSound('http://127.0.0.1:8080/sounds/click.mp3');
         planets.forEach(planet => planet.toggleOrbitVisibility());
     });
 
