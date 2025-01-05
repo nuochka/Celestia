@@ -43,6 +43,13 @@ button:active {
     z-index: 1;
 }
 
+#start-music {
+    position: absolute;
+    top: 170px;
+    left: 20px;
+    z-index: 1;
+}
+
 #toggle-motion-planet {
     position: absolute;
     bottom: 60px;
