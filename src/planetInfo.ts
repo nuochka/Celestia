@@ -42,6 +42,11 @@ interface PlanetInfo {
     moonsInfo: MoonInfo[];
 }
 
+export function playSound(soundUrl: string) {
+    const audio = new Audio(soundUrl);
+    audio.play();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.getElementById('solar-system') as HTMLCanvasElement;
     const starConfig: StarFieldConfig = {
@@ -586,6 +591,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const link = document.getElementById(planet) as HTMLAnchorElement;
         if (link) {
             link.addEventListener('click', (event) => {
+                playSound('http://127.0.0.1:8080/sounds/click_3.wav');
                 event.preventDefault();
                 switchPlanet(planet);
             });
@@ -594,8 +600,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const togglePlanetMenuButton = document.getElementById("togglePlanetMenuButton") as HTMLButtonElement;
     const planetList = document.getElementById("planetList") as HTMLUListElement;
-
+    
     togglePlanetMenuButton.addEventListener("click", () => {
+        playSound('http://127.0.0.1:8080/sounds/click_2.mp3');
         if (planetList.classList.contains("hidden")) {
             planetList.classList.remove("hidden");
             planetList.classList.add("expanded");
@@ -611,6 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleSidebarButton = document.getElementById("toggle-sidebar-button") as HTMLButtonElement;
 
     toggleSidebarButton.addEventListener("click", () => {
+        playSound('http://127.0.0.1:8080/sounds/click_2.mp3');
         sidebar.classList.toggle("collapsed");
 
         if (sidebar.classList.contains("collapsed")) {
@@ -624,6 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleButton = document.getElementById("toggle-motion-planet") as HTMLButtonElement;
 
     toggleButton.addEventListener('click', () => {
+        playSound('http://127.0.0.1:8080/sounds/click.mp3');
         paused = !paused;
         toggleButton.textContent = paused ? 'Resume' : 'Pause';
 
