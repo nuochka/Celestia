@@ -73,8 +73,8 @@ export function initializeScene(gl: WebGLRenderingContext, canvas: HTMLCanvasEle
     const asteroidBelt = new AsteroidBelt(gl, 300, 10, 13.5);
     const kuiperBelt = new AsteroidBelt(gl, 6000, 56, 100);
 
-    const saturnRing = new Ring(gl, 1.0, 2.5, 100, 'http://127.0.0.1:8080/textures/saturn_ring.png', saturnConfig.fieldOfView, saturnConfig.aspect, saturnConfig.zNear, saturnConfig.zFar, 0.001, 0.002, 22.0);
-    const uranusRing = new Ring(gl, 1.0, 1.5, 100, 'http://127.0.0.1:8080/textures/uranus_ring.jpg', uranusConfig.fieldOfView, uranusConfig.aspect, uranusConfig.zNear, uranusConfig.zFar, 0.0005, 0.0004, 40.0, 0, 0, true);
+    const saturnRing = new Ring(gl, 1.0, 2.5, 100, 'http://127.0.0.1:8080/textures/saturn_ring.png', saturnConfig.fieldOfView, saturnConfig.aspect, saturnConfig.zNear, saturnConfig.zFar, 0.0008, 0, 22.0);
+    const uranusRing = new Ring(gl, 1.0, 1.5, 100, 'http://127.0.0.1:8080/textures/uranus_ring.jpg', uranusConfig.fieldOfView, uranusConfig.aspect, uranusConfig.zNear, uranusConfig.zFar, 0.0002, 0.0004, 40.0, 0, 0, true);
     const planets = [
         mercury,
         venus,

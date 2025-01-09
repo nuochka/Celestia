@@ -18,7 +18,7 @@ export class Uranus extends Planet {
     constructor(
         gl: WebGLRenderingContext
     ) {
-        super(gl, uranusConfig, 40.0, -0.0004, 0.0005, [0.8, 0.8, 0.6, 1.0]);
+        super(gl, uranusConfig, 40.0, -0.0001, 0.0005, [0.8, 0.8, 0.6, 1.0]);
     }
 }
 

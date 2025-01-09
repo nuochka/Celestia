@@ -19,7 +19,7 @@ export class Saturn extends Planet {
     constructor(
         gl: WebGLRenderingContext
     ) {  
-        super(gl, saturnConfig, 22.0, -0.002, 0.001, [0.8, 0.8, 0.6, 1.0]);
+        super(gl, saturnConfig, 22.0, 0.0042, 0.005, [0.8, 0.8, 0.6, 1.0]);
     }
 }
 

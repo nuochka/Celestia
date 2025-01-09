@@ -20,7 +20,7 @@ abstract class BaseGridField {
     protected config: GridFieldConfig;
     protected program: WebGLProgram;
     protected positionBuffer: WebGLBuffer;
-    protected cameraDistance: number = 0.5;
+    protected cameraDistance: number = 20.0;
     private isVisible: boolean = true;
 
     constructor(gl: WebGLRenderingContext, config: GridFieldConfig, vertexShaderSource: string, fragmentShaderSource: string) {

@@ -1,8 +1,8 @@
 let paused = false;
 export let cameraAngleX = 0;
 export let cameraAngleY = 0;
-export let cameraDistance = 2;
-export const minCameraDistance = 1.0;
+export let cameraDistance = 20.0;
+export const minCameraDistance = 20.0;
 export const maxCameraDistance = 200.0;
 let lastMouseX = 0;
 let lastMouseY = 0;
