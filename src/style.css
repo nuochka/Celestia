@@ -15,7 +15,7 @@ canvas {
 }
 
 button {
-    background-color: #1e3a8a;
+    background-color: #162653eb;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -28,7 +28,7 @@ button {
 }
 
 button:hover {
-    background-color: #2563eb;
+    background-color: #264498eb;
     transform: scale(1.05);
 }
 
@@ -81,7 +81,7 @@ button:active {
     font-size: 16px;
     color: white;
     padding: 15px;
-    border: 2px solid #2563eb;
+    border: 2px solid #162653eb;
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.7);
 }
@@ -95,7 +95,7 @@ button:active {
 }
 
 #scale-slider:hover {
-    background-color: #1e3a8a;
+    background-color: #254396eb;
 }
 
 #scale-display {
@@ -110,7 +110,7 @@ button:active {
     right: 10px;
     z-index: 1000;
     padding: 10px;
-    background-color: #1e3a8a;
+    background-color: #162653eb;
     color: white;
     border: none;
     border-radius: 8px;
@@ -124,11 +124,11 @@ button:active {
     right: 10px;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.8);
-    border: 2px solid #2563eb;
-    border-radius: 8px;
+    border: 2px solid #122653;
+    border-radius: 10px;
     padding: 10px;
     list-style: none;
-    max-height: 200px;
+    max-height: 400px;
     overflow-y: auto;
     display: none;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
@@ -146,7 +146,7 @@ button:active {
 }
 
 #planetList li:hover {
-    background-color: #2563eb;
+    background-color: #14274d;
     border-radius: 5px;
 }
 
@@ -167,7 +167,7 @@ button:active {
     overflow-y: auto;
     z-index: 1001;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.6);
-    border-right: 4px solid #2563eb;
+    border-right: 4px solid #162653eb;
     transition: transform 0.4s ease-in-out;
     transform: translateX(0);
 }
@@ -191,7 +191,7 @@ button:active {
     top: 55%;
     left: 442px;
     transform: translateY(-100%);
-    background-color: #254aaedc;
+    background-color: #35477beb;
     color: white;
     border: none;
     padding: 12px 18px;
@@ -203,7 +203,7 @@ button:active {
 }
 
 #toggle-sidebar-button:hover {
-    background-color: #1f65fbfb;
+    background-color: #2a3c6deb;
 }
 
 
@@ -213,7 +213,7 @@ button:active {
     bottom: 10px;
     z-index: 1000;
     padding: 10px;
-    background-color: #1e3a8a;
+    background-color: #162653eb;
     color: white;
     border: none;
     border-radius: 8px;
@@ -222,7 +222,7 @@ button:active {
 }
 
 #returnHomeButton:hover {
-    background-color: #2563eb;
+    background-color: #254396eb;
     transform: scale(1.05);
 }
 
