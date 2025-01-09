@@ -4,8 +4,11 @@ body, html {
     overflow: hidden;
     height: 100%;
     font-family: 'Orbitron', sans-serif;
-    background: #1a1a2e;
-    color: #fff;
+    background: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 canvas {
@@ -15,7 +18,7 @@ canvas {
 }
 
 button {
-    background-color: #162653eb;
+    background-color: #2b2b3d;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -23,12 +26,12 @@ button {
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out;
     font-family: 'Orbitron', sans-serif;
 }
 
 button:hover {
-    background-color: #264498eb;
+    background-color: #3a3a4f;
     transform: scale(1.05);
 }
 
@@ -36,39 +39,36 @@ button:active {
     transform: scale(0.95);
 }
 
-#toggle-motion {
+#toggle-motion, #start-music, #toggle-motion-planet, #toggleGridButton, #toggleOrbitButton, 
+#returnHomeButton {
     position: absolute;
+    z-index: 1;
+    transition: transform 0.3s ease-in-out;
+}
+
+#toggle-motion {
     top: 20px;
     left: 20px;
-    z-index: 1;
 }
 
 #start-music {
-    position: absolute;
     top: 170px;
     left: 20px;
-    z-index: 1;
 }
 
 #toggle-motion-planet {
-    position: absolute;
     bottom: 60px;
     right: 10px;
-    z-index: 1;
 }
 
 #toggleGridButton {
-    position: absolute;
     top: 70px;
     left: 20px;
-    z-index: 1;
 }
 
 #toggleOrbitButton {
-    position: absolute;
     top: 120px;
     left: 20px;
-    z-index: 1;
 }
 
 #scale-container {
@@ -81,21 +81,16 @@ button:active {
     font-size: 16px;
     color: white;
     padding: 15px;
-    border: 2px solid #162653eb;
+    border: 2px solid #2b2b3d;
     border-radius: 8px;
     background-color: rgba(0, 0, 0, 0.7);
 }
 
 #scale-slider {
-    width: 200px;
+    width: 300px;
     background-color: #444;
     border-radius: 10px;
     height: 10px;
-    transition: background-color 0.3s;
-}
-
-#scale-slider:hover {
-    background-color: #254396eb;
 }
 
 #scale-display {
@@ -110,7 +105,7 @@ button:active {
     right: 10px;
     z-index: 1000;
     padding: 10px;
-    background-color: #162653eb;
+    background-color: #2b2b3d;
     color: white;
     border: none;
     border-radius: 8px;
@@ -124,14 +119,13 @@ button:active {
     right: 10px;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.8);
-    border: 2px solid #122653;
+    border: 2px solid #2b2b3d;
     border-radius: 10px;
     padding: 10px;
     list-style: none;
     max-height: 400px;
     overflow-y: auto;
     display: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
 #planetList.expanded {
@@ -142,14 +136,12 @@ button:active {
     padding: 10px;
     margin: 5px 0;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 #planetList li:hover {
-    background-color: #14274d;
+    background-color: #1a1a2d;
     border-radius: 5px;
 }
-
 
 .hidden {
     display: none;
@@ -161,17 +153,16 @@ button:active {
     left: 0;
     width: 400px;
     height: 100%;
-    background-color: rgba(21, 21, 70, 0.9);
+    background-color: rgba(24, 24, 58, 0.9);
     padding: 20px;
-    color: white;
+    color: #e0e0e0;
     overflow-y: auto;
     z-index: 1001;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.6);
-    border-right: 4px solid #162653eb;
+    border-right: 4px solid #1f1f43;
     transition: transform 0.4s ease-in-out;
     transform: translateX(0);
 }
-
 
 #planet-info-sidebar.collapsed {
     transform: translateX(-100%);
@@ -179,11 +170,32 @@ button:active {
 
 #planet-info-sidebar h2 {
     margin-top: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #f0f0f0;
 }
 
 #planet-info-sidebar #planet-info-content {
     margin-top: 20px;
+    background-color: #2b2b3d;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    color: #e0e0e0;
 }
+
+#planet-info-sidebar #planet-info-content h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+#planet-info-sidebar #planet-info-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #dcdcdc;
+}
+
 
 #toggle-sidebar-button {
     position: fixed;
@@ -199,21 +211,20 @@ button:active {
     cursor: pointer;
     border-radius: 0 8px 8px 0;
     z-index: 1002;
-    transition: background-color 0.3s ease, left 0.4s ease-in-out;
+    transition: left 0.4s ease-in-out;
 }
 
 #toggle-sidebar-button:hover {
     background-color: #2a3c6deb;
 }
 
-
-#returnHomeButton{
+#returnHomeButton {
     position: absolute;
     right: 10px;
     bottom: 10px;
     z-index: 1000;
     padding: 10px;
-    background-color: #162653eb;
+    background-color: #2b2b3d;
     color: white;
     border: none;
     border-radius: 8px;
@@ -222,10 +233,102 @@ button:active {
 }
 
 #returnHomeButton:hover {
-    background-color: #254396eb;
+    background-color: #3a3a4f;
     transform: scale(1.05);
 }
 
 #returnHomeButton:active {
     transform: scale(0.95);
 }
+
+#planet-info-content {
+    margin-top: 20px;
+    background-color: #2b2b3d;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
+#planet-info-content h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #162653;
+    padding-bottom: 10px;
+}
+
+#planet-info-content h3 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #e4e4e4;
+    margin-top: 25px;
+    border-bottom: 2px solid #162653;
+    padding-bottom: 8px;
+}
+
+#planet-info-content p {
+    font-size: 16px;
+    color: #dcdcdc;
+    margin-bottom: 12px;
+}
+
+#planet-info-content p strong {
+    color: #f9f9f9;
+}
+
+#planet-info-content ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+#planet-info-content li {
+    margin-bottom: 10px;
+}
+
+#planet-info-content li:before {
+    content: "• ";
+    color: #3b82f6;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+#planet-info-content .moon-info {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+#planet-info-content .moon-info h4 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #f9f9f9;
+}
+
+#planet-info-content .moon-info p {
+    font-size: 14px;
+    color: #dcdcdc;
+    margin-bottom: 8px;
+}
+
+#planet-info-content .moon-info p strong {
+    color: #f9f9f9;
+}
+
+a {
+    color: #dcdcdc;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #b0b0b0;
+}
+
+a:active {
+    color: #a0a0a0;
+}
+
