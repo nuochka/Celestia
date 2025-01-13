@@ -51,17 +51,10 @@ export class NeptuneSphere extends Sphere{
             zFar: 1000.0,
             textureUrl: 'http://127.0.0.1:8080/textures/moons/triton_texture.jpg'
         };
-        this.moon = new Moon(gl, moonConfig, 4.5, this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
-        this.addAsteroidMoon(gl, 2.0, 0.003, 'http://127.0.0.1:8080/textures/moons/proteus_texture.jpg'); 
+        this.moon = new Moon(gl, moonConfig, 4.5, -0.0012, 0);
+        this.addAsteroidMoon(gl, 2.0, -0.0012, 'http://127.0.0.1:8080/textures/moons/proteus_texture.jpg'); 
     }
 
-
-    setNeptuneSpeeds(orbitSpeed: number, rotationSpeed: number) {
-        this.angularSpeed = orbitSpeed;
-        this.rotationSpeed = rotationSpeed;
-
-        this.moon.setMoonSpeeds(this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
-    }
     togglePause() {
         this.paused = !this.paused;
     }

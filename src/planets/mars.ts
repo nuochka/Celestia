@@ -5,7 +5,7 @@ export class Mars extends Planet{
 
     constructor(gl: WebGLRenderingContext) {
         const marsConfig: SphereConfig = {
-            radius: 0.35,
+            radius: 0.5,
             latitudeBands: 20,
             longitudeBands: 20,
             fieldOfView: 50,
@@ -21,13 +21,13 @@ export class Mars extends Planet{
 export class MarsSphere extends Sphere {
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
-    private angularSpeed: number = 0.01;
+    private angularSpeed: number = 0.007;
     private rotationSpeed: number = 0.005;
     private paused: boolean = false;
 
     constructor(gl: WebGLRenderingContext) {
         const marsConfig: SphereConfig = {
-            radius: 0.5,
+            radius: 0.35,
             latitudeBands: 20,
             longitudeBands: 20,
             fieldOfView: 50,
@@ -37,17 +37,12 @@ export class MarsSphere extends Sphere {
             textureUrl: 'http://127.0.0.1:8080/textures/mars_texture.jpg'
         };
         super(gl, marsConfig);
-        this.addAsteroidMoon(gl, 1.5, 0.005, 'http://127.0.0.1:8080/textures/moons/phobos_texture.jpg');
-        this.addAsteroidMoon(gl, 3, 0.003, 'http://127.0.0.1:8080/textures/moons/deimos_texture.jpg');
+        this.addAsteroidMoon(gl, 1.5, -0.001, 'http://127.0.0.1:8080/textures/moons/phobos_texture.jpg');
+        this.addAsteroidMoon(gl, 3, -0.0002, 'http://127.0.0.1:8080/textures/moons/deimos_texture.jpg');
     }
 
     togglePause() {
         this.paused = !this.paused;
-    }
-
-    setMarsSpeeds(orbitSpeed: number, rotationSpeed: number) {
-        this.angularSpeed = orbitSpeed;
-        this.rotationSpeed = rotationSpeed;
     }
 
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {

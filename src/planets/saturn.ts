@@ -58,13 +58,13 @@ export class SaturnSphere extends Sphere {
             this.orbitRadius
         );
 
-        this.createAndAddMoon(gl, 3.0, 0.015, 'http://127.0.0.1:8080/textures/moons/mimas_texture.jpg');
-        this.createAndAddMoon(gl, 4.0, 0.014, 'http://127.0.0.1:8080/textures/moons/enceladus_texture.jpg');
-        this.createAndAddMoon(gl, 5.0, 0.013, 'http://127.0.0.1:8080/textures/moons/tethys_texture.jpg');
-        this.createAndAddMoon(gl, 6.5, 0.012, 'http://127.0.0.1:8080/textures/moons/dione_texture.jpg');
-        this.createAndAddMoon(gl, 8.0, 0.010, 'http://127.0.0.1:8080/textures/moons/rhea_texture.jpg');
-        this.createAndAddMoon(gl, 11.5, 0.005, 'http://127.0.0.1:8080/textures/moons/titan_texture.jpg');
-        this.createAndAddMoon(gl, 13.5, 0.003, 'http://127.0.0.1:8080/textures/moons/hyperion_texture.jpg');
+        this.createAndAddMoon(gl, 3.0, -0.002, 'http://127.0.0.1:8080/textures/moons/mimas_texture.jpg');
+        this.createAndAddMoon(gl, 4.0, -0.0012, 'http://127.0.0.1:8080/textures/moons/enceladus_texture.jpg');
+        this.createAndAddMoon(gl, 5.0, -0.0010, 'http://127.0.0.1:8080/textures/moons/tethys_texture.jpg');
+        this.createAndAddMoon(gl, 6.5, -0.0008, 'http://127.0.0.1:8080/textures/moons/dione_texture.jpg');
+        this.createAndAddMoon(gl, 8.0, -0.0006, 'http://127.0.0.1:8080/textures/moons/rhea_texture.jpg');
+        this.createAndAddMoon(gl, 11.5, -0.0004, 'http://127.0.0.1:8080/textures/moons/titan_texture.jpg');
+        this.createAndAddMoon(gl, 13.5, -0.0003, 'http://127.0.0.1:8080/textures/moons/hyperion_texture.jpg');
     }
 
     private createAndAddMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string) {
@@ -81,14 +81,6 @@ export class SaturnSphere extends Sphere {
 
         const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
         super.addMoon(moon);
-    }
-
-    setSaturnSpeeds(orbitSpeed: number, rotationSpeed: number) {
-        this.angularSpeed = orbitSpeed;
-
-        this.moons.forEach(moon => {
-            moon.setMoonSpeeds(this.angularSpeed * 0.5, rotationSpeed * 0.5);
-        });
     }
 
     togglePause() {

@@ -23,7 +23,7 @@ export class EarthSphere extends Sphere{
     private orbitRadius: number = 0.0001;
     private angle: number = 0;
     private angularSpeed: number = 0.01;
-    private rotationSpeed: number = 0.005;
+    private rotationSpeed: number = 0.05;
     private moon: Moon;
 
     private paused: boolean = false;
@@ -52,16 +52,9 @@ export class EarthSphere extends Sphere{
             textureUrl: 'http://127.0.0.1:8080/textures/moons/moon_texture.jpg'
         };
 
-        this.moon = new Moon(gl, moonConfig, 2.5, this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
+        this.moon = new Moon(gl, moonConfig, 2.5, 0.001, 0.002);
     }
-
-    setEarthSpeeds(orbitSpeed: number, rotationSpeed: number) {
-        this.angularSpeed = orbitSpeed;
-        this.rotationSpeed = rotationSpeed;
-
-        this.moon.setMoonSpeeds(this.angularSpeed * 0.5, this.rotationSpeed * 0.5);
-    }
-
+    
     togglePause() {
         this.paused = !this.paused;
     }
