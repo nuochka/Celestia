@@ -11,8 +11,9 @@ export class OrbitField {
     private orbitBuffer: WebGLBuffer;
     private numVertices: number; 
     private isVisible: boolean;
+    private isVerticalOrbit: boolean;
 
-    constructor(gl: WebGLRenderingContext, config: { radius: number, color: [number, number, number, number], fieldOfView: number, aspect: number, zNear: number, zFar: number }) {
+    constructor(gl: WebGLRenderingContext, config: { radius: number, color: [number, number, number, number], fieldOfView: number, aspect: number, zNear: number, zFar: number, isVerticalOrbit?: boolean }) {
         this.gl = gl;
         this.radius = config.radius;
         this.color = config.color; 
@@ -21,6 +22,7 @@ export class OrbitField {
         this.zNear = config.zNear;
         this.zFar = config.zFar;
         this.isVisible = true;
+        this.isVerticalOrbit = config.isVerticalOrbit ?? false;
 
         // Create the orbit buffer
         const orbitVertices = this.createOrbitVertices(this.radius, 100);
@@ -42,14 +44,27 @@ export class OrbitField {
     // Function to create orbit vertices
     private createOrbitVertices(radius: number, segments: number): Float32Array {
         const vertices = [];
-        for (let i = 0; i <= segments; i++) {
-            const angle = (i / segments) * 2 * Math.PI;
-            const x = radius * Math.cos(angle);
-            const z = radius * Math.sin(angle);
-            vertices.push(x, 0, z);
+
+        if (!this.isVerticalOrbit) {
+            // Regular orbit in X-Z plane
+            for (let i = 0; i <= segments; i++) {
+                const angle = (i / segments) * 2 * Math.PI;
+                const x = radius * Math.cos(angle);
+                const z = radius * Math.sin(angle);
+                vertices.push(x, 0, z);
+            }
+        } else {
+            // Vertical orbit in X-Y plane
+            for (let i = 0; i <= segments; i++) {
+                const angle = (i / segments) * 2 * Math.PI;
+                const x = radius * Math.cos(angle);
+                const y = radius * Math.sin(angle);
+                vertices.push(x, y, 0);
+            }
         }
+    
         return new Float32Array(vertices);
-    }
+    } 
 
     // Render the orbit
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
