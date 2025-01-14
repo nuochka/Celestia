@@ -59,3 +59,27 @@ You can then access the application at:
 - `http://127.0.0.1:8080`
 - `http://192.168.1.49:8080` (or similar local IPs)
 
+
+## Screenshots
+
+### Solar System
+![View Solar System Screenshot 1](images/solarsystem_screenshot.png "Solar System Overview 1")
+
+![View Solar System Screenshot 2](images/solarsystem_screenshot2.png "Solar System Overview 2")
+
+---
+
+### Jupiter
+![View Jupiter Screenshot](images/jupiter_screenshot.png "Jupiter in the simulation")
+
+---
+
+### Mercury
+![View Mercury Screenshot](images/mercury_screenshot.png "Mercury in the simulation")
+
+---
+
+### Uranus
+![View Uranus Screenshot](images/uranus_screenshot.png "Uranus in the simulation")
+
+
