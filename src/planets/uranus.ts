@@ -61,7 +61,7 @@ export class UranusSphere extends Sphere {
              true
         );
 
-        this.addAsteroidMoon(gl, 2.0, -0.002, 'http://127.0.0.1:8080/textures/moons/puck_texture.jpg'); 
+        this.createAndAddMoon(gl, 2.0, -0.002, 'http://127.0.0.1:8080/textures/moons/puck_texture.jpg'); 
         this.createAndAddMoon(gl, 3.0, -0.0012, 'http://127.0.0.1:8080/textures/moons/miranda_texture.jpg');
         this.createAndAddMoon(gl, 4.0, -0.0010, 'http://127.0.0.1:8080/textures/moons/ariel_texture.jpg');
         this.createAndAddMoon(gl, 5.0, -0.0008, 'http://127.0.0.1:8080/textures/moons/umbriel_texture.jpg');
@@ -86,7 +86,8 @@ export class UranusSphere extends Sphere {
             textureUrl: textureUrl,
         };
 
-        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001);
+        const moon = new Moon(gl, moonConfig, orbitRadius, orbitalSpeed, 0.001, true);
+        moon.setVerticalOrbit(true);
         this.addMoon(moon);
     }
 
