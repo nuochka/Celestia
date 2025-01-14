@@ -48,7 +48,7 @@ export class UranusSphere extends Sphere {
             0.8, 
             1.2, 
             100, 
-            'http://127.0.0.1:8080/textures/uranus_ring.jpg', 
+            'http://127.0.0.1:8080/textures/uranus_ring.png', 
             uranusConfig.fieldOfView, 
             uranusConfig.aspect, 
             uranusConfig.zNear,
