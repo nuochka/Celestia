@@ -15,6 +15,7 @@ export class Ring {
     private zNear: number;
     private zFar: number;
     private isUranus: boolean;
+    private isUranusInfo: boolean;
 
     private rotationAngle: number = 0;
     private orbitAngle: number = 0;
@@ -41,6 +42,7 @@ export class Ring {
         y: number = 0,
         z: number = 0,
         isUranus: boolean = false,
+        isUranusInfo: boolean = false,
     ) {
         this.gl = gl;
 
@@ -49,11 +51,11 @@ export class Ring {
         this.zNear = zNear;
         this.zFar = zFar;
         this.isUranus = isUranus;
-
+        this.isUranusInfo = isUranusInfo;
         this.program = Ring.createProgram(gl);
 
         const { positionBuffer, texCoordBuffer, indexBuffer, indexCount } =
-            Ring.createBuffers(gl, innerRadius, outerRadius, radialSegments, isUranus);
+            Ring.createBuffers(gl, innerRadius, outerRadius, radialSegments, isUranus, isUranusInfo);
         this.positionBuffer = positionBuffer;
         this.texCoordBuffer = texCoordBuffer;
         this.indexBuffer = indexBuffer;
@@ -106,7 +108,8 @@ export class Ring {
         innerRadius: number,
         outerRadius: number,
         radialSegments: number,
-        isUranus: boolean
+        isUranus: boolean,
+        isUranusInfo: boolean,
     ): {
         positionBuffer: WebGLBuffer;
         texCoordBuffer: WebGLBuffer;
@@ -183,8 +186,6 @@ export class Ring {
         this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
     }
     
-    
-    
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         const gl = this.gl;
         const program = this.program;
@@ -221,6 +222,9 @@ export class Ring {
     
         if (this.isUranus) {
             mat4.rotateZ(objectMatrix, objectMatrix, Math.PI * 98 / 180);
+        }
+        if(this.isUranusInfo){
+            mat4.rotateX(objectMatrix, objectMatrix, Math.PI * 90 / 180);
         }
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
     

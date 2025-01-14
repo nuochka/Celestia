@@ -58,6 +58,7 @@ export class UranusSphere extends Sphere {
              0, 
              0, 
              0, 
+             false,
              true
         );
 
