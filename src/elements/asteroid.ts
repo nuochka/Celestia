@@ -2,6 +2,8 @@ import { mat4 } from 'gl-matrix';
 import { createProgram } from '../utils/webgl-utils';
 import { OrbitField } from './orbit';
 
+
+// Interface defining the configuration for an asteroid
 export interface AsteroidConfig {
     radius: number;
     xScale: number;
@@ -16,6 +18,7 @@ export interface AsteroidConfig {
     roughness: number;
 }
 
+// Main class representing an asteroid
 export class Asteroid {
     public gl: WebGLRenderingContext;  
     public config: AsteroidConfig;        
@@ -25,13 +28,13 @@ export class Asteroid {
     private texCoordBuffer: WebGLBuffer; 
     private texture?: WebGLTexture;
 
-    protected moons: AsteroidMoon[] = [];
+    protected moons: AsteroidMoon[] = []; // Array of moons orbiting the asteroid
 
     constructor(gl: WebGLRenderingContext, config: AsteroidConfig) {
         this.gl = gl;                     
         this.config = config;             
 
-        // Shaders
+         // Vertex shader source code
         const vertexShaderSource = `
             attribute vec3 aPosition;
             attribute vec2 aTexCoord;
@@ -46,6 +49,7 @@ export class Asteroid {
             }`
         ;
 
+        // Fragment shader source code
         const fragmentShaderSource = `
             precision mediump float;
             varying vec2 vTexCoord;
@@ -66,12 +70,15 @@ export class Asteroid {
                 gl_FragColor = vec4(ambient + diffuse, textureColor.a);
             }`
         ;
-
+        // Create and compile the shader program
         this.program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
+
+        // Create buffers for position, indices, and texture coordinates
         this.positionBuffer = this.createAsteroidBuffer();
         this.indexBuffer = this.createIndexBuffer();
         this.texCoordBuffer = this.createTexCoordBuffer();
 
+        // Load the texture
         this.loadTexture(config.textureUrl)
             .then(texture => {
                 this.texture = texture; 
@@ -81,6 +88,7 @@ export class Asteroid {
             });
     }
 
+    // Function to create a buffer with asteroid vertex positions and normals
     private createAsteroidBuffer(): WebGLBuffer {
         const positions: number[] = []; 
         const normals: number[] = [];
@@ -171,16 +179,15 @@ export class Asteroid {
         return buffer;
     }
 
+    // Function to load texture from a given URL
     public loadTexture(url: string): Promise<WebGLTexture> {
         const texture = this.gl.createTexture();
         if (!texture) {
             throw new Error('Failed to create texture');
         }
     
-        // Bind the texture to WebGL
+        // Bind the texture and set parameters
         this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
-    
-        // Set texture parameters for wrapping and filtering
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
@@ -200,6 +207,7 @@ export class Asteroid {
                 this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
                 this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
     
+                 // Generate mipmaps for textures with power-of-two dimensions
                 if ((image.width & (image.width - 1)) === 0 && (image.height & (image.height - 1)) === 0) {
                     this.gl.generateMipmap(this.gl.TEXTURE_2D);
                     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);
@@ -214,6 +222,7 @@ export class Asteroid {
         });
     }
 
+    // Function to add a moon to the asteroid
     public addAsteroidMoon(moon: AsteroidMoon): void {
         this.moons.push(moon);
     }
@@ -223,14 +232,18 @@ export class Asteroid {
         this.moons.forEach(moon => moon.update(scale));
     }
 
+    // Render the asteroid and its moons
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number, x: number, y: number, z: number, rotationAngle: number = 0, orbitalSpeed: number = 0, lightDirection: Float32Array, isSun: boolean) {
         if (!this.texture) return;
+
+        // Render all moons orbiting the asteroid
         this.moons.forEach(moon => moon.render(x, y, z, cameraAngleX, cameraAngleY, cameraDistance));
         
         const gl = this.gl;
         const program = this.program;
         gl.useProgram(program);
     
+        // Set up perspective and camera matrices
         const perspectiveMatrix = mat4.create();
         mat4.perspective(
             perspectiveMatrix,
@@ -249,8 +262,9 @@ export class Asteroid {
         
         mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
+
+        // Create an object matrix for transformations
         const objectMatrix = mat4.create();
-        
         if (!isSun) {
             mat4.rotateY(objectMatrix, objectMatrix, rotationAngle);
             mat4.rotateY(objectMatrix, objectMatrix, orbitalSpeed);
@@ -258,20 +272,24 @@ export class Asteroid {
         }
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
     
+        // Set the light direction
         const lightDirectionVec = new Float32Array([0, 0, 0]); 
         lightDirectionVec[0] = -x;
         lightDirectionVec[1] = -y;
         lightDirectionVec[2] = -z;
     
+        // Get locations for uniform variables in the shader program
         const uMatrixLocation = this.gl.getUniformLocation(this.program, "uMatrix");
         const uLightDirectionLocation = this.gl.getUniformLocation(this.program, "uLightDirection");
         const uAmbientLightLocation = this.gl.getUniformLocation(this.program, "uAmbientLight");
     
+        // Set the uniform variables in the shader program
         this.gl.uniformMatrix4fv(uMatrixLocation, false, perspectiveMatrix);
         this.gl.uniform3fv(uLightDirectionLocation, lightDirectionVec);
         
         this.gl.uniform3fv(uAmbientLightLocation, new Float32Array(isSun ? [1.0, 1.0, 0.5] : [0.1, 0.1, 0.1]));
     
+        // Set up attribute locations for vertex position, normal, and texture coordinates
         const aPositionLocation = this.gl.getAttribLocation(this.program, "aPosition");
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         this.gl.vertexAttribPointer(aPositionLocation, 3, this.gl.FLOAT, false, 0, 0);
@@ -281,22 +299,25 @@ export class Asteroid {
         this.gl.vertexAttribPointer(aNormalLocation, 3, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(aNormalLocation);
     
+        // Set up texture coordinates attribute
         const aTexCoordLocation = this.gl.getAttribLocation(this.program, "aTexCoord");
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texCoordBuffer);
         this.gl.vertexAttribPointer(aTexCoordLocation, 2, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(aTexCoordLocation);
-    
+
+        // Bind the texture to texture unit 0 and set the shader to use it
         this.gl.activeTexture(this.gl.TEXTURE0);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
         const uSamplerLocation = this.gl.getUniformLocation(this.program, "uSampler");
         this.gl.uniform1i(uSamplerLocation, 0);
     
+        // Bind the index buffer and draw the asteroid using element indices
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         this.gl.drawElements(this.gl.TRIANGLES, 6 * this.config.latitudeBands * this.config.longitudeBands, this.gl.UNSIGNED_SHORT, 0);
     } 
 }
 
-
+// Class representing a moon orbiting an asteroid
 export class AsteroidMoon {
     private gl: WebGLRenderingContext;
     private asteroid: Asteroid;
@@ -314,10 +335,12 @@ export class AsteroidMoon {
         this.orbitRadius = orbitRadius;
         this.orbitSpeed = orbitSpeed;
         this.rotationSpeed = rotationSpeed;
-        
+
+        // Initialize the asteroid object representing the moon
         this.asteroid = new Asteroid(gl, config);
         this.asteroid.loadTexture(config.textureUrl);
 
+        // Initialize the orbit visualization field (representing the orbit)
         this.orbitField = new OrbitField(gl, {
             radius: orbitRadius,
             color: [0.68, 0.85, 0.90, 1.0],
@@ -328,21 +351,28 @@ export class AsteroidMoon {
         });
     }
 
+    // Method to update the moon's orbital and rotational speeds
     public setMoonSpeeds(orbitSpeed: number, rotationSpeed: number): void {
         this.orbitSpeed = -orbitSpeed;
         this.rotationSpeed = -rotationSpeed;
     }
 
+    // Method to update the moon's position and rotation based on the elapsed time (scale)
     public update(scale: number): void {
         this.angle = (this.angle + this.orbitSpeed * scale) % (2 * Math.PI);
         this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
     }
 
+
+    // Method to render the moon and its orbit
     public render(parentX: number, parentY: number, parentZ: number, cameraAngleX: number, cameraAngleY: number, cameraDistance: number): void {
+        // Calculate the moon's position based on its orbit radius and angle
         const x = parentX + this.orbitRadius * Math.cos(this.angle);
         const y = parentY;
         const z = parentZ + this.orbitRadius * Math.sin(this.angle);
 
+
+        // Calculate light direction for the moon based on its position relative to the asteroid
         const lightDirection = new Float32Array([x - parentX, y - parentY, z - parentZ]);
         const length = Math.sqrt(lightDirection[0] ** 2 + lightDirection[1] ** 2 + lightDirection[2] ** 2);
         lightDirection[0] /= length;
@@ -354,6 +384,7 @@ export class AsteroidMoon {
         this.orbitField.render(cameraAngleX, cameraAngleY, cameraDistance);
     }
 
+    // Method to toggle the visibility of the moon's orbit field
     public setOrbitVisible(visible: boolean): void {
         this.orbitField.setVisible(visible);
     }

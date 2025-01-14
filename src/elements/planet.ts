@@ -34,6 +34,7 @@ export abstract class Planet {
         });
     }
 
+    // Method to toggle the visibility of the planet's orbit
     public toggleOrbitVisibility(): void {
         this.isOrbitVisible = !this.isOrbitVisible;
         this.orbit.setVisible(this.isOrbitVisible);
@@ -44,11 +45,13 @@ export abstract class Planet {
     }
     
 
+    // Update method to adjust the planet's angle and rotation based on time scaling
     public update(scale: number) {
         this.angle = (this.angle + this.orbitSpeed * scale) % (2 * Math.PI);
         this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
     }
 
+    // Render method
     public render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         this.orbit.render(cameraAngleX, cameraAngleY, cameraDistance);
         const x = this.orbitRadius * Math.cos(this.angle);

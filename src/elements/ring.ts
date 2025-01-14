@@ -54,6 +54,7 @@ export class Ring {
         this.isUranusInfo = isUranusInfo;
         this.program = Ring.createProgram(gl);
 
+        // Generate buffers and texture for the ring
         const { positionBuffer, texCoordBuffer, indexBuffer, indexCount } =
             Ring.createBuffers(gl, innerRadius, outerRadius, radialSegments, isUranus, isUranusInfo);
         this.positionBuffer = positionBuffer;
@@ -74,6 +75,7 @@ export class Ring {
         this.z = z;
     }
 
+    // Create shader program for the ring (vertex and fragment shaders)
     static createProgram(gl: WebGLRenderingContext): WebGLProgram {
         const vertexShaderSource = `
             attribute vec3 aPosition;
@@ -103,6 +105,7 @@ export class Ring {
         return createProgram(gl, vertexShaderSource, fragmentShaderSource);
     }
 
+    // Create the buffers for storing the vertex positions, texture coordinates, and indices
     static createBuffers(
         gl: WebGLRenderingContext,
         innerRadius: number,
@@ -119,19 +122,23 @@ export class Ring {
         const positions: number[] = [];
         const texCoords: number[] = [];
         const indices: number[] = [];
-        const angleStep = (2 * Math.PI) / radialSegments;
+        const angleStep = (2 * Math.PI) / radialSegments; // Angle step for each radial segment
     
+        // Create the vertices, texture coordinates, and indices for the ring
         for (let i = 0; i <= radialSegments; i++) {
             const angle = i * angleStep;
             const cos = Math.cos(angle);
             const sin = Math.sin(angle);
     
+            // Outer circle
             positions.push(outerRadius * cos, 0, outerRadius * sin);
             texCoords.push(0, (i / radialSegments));
     
+            // Inner circle
             positions.push(innerRadius * cos, 0, innerRadius * sin);
             texCoords.push(1, (i / radialSegments));
     
+            // Indices for drawing the ring as two triangles per segment
             if (i < radialSegments) {
                 const base = i * 2;
                 indices.push(base, base + 1, base + 2, base + 2, base + 1, base + 3);
@@ -153,6 +160,7 @@ export class Ring {
         return { positionBuffer, texCoordBuffer, indexBuffer, indexCount: indices.length };
     }    
 
+    // Load the texture for the ring asynchronously
     static loadTexture(gl: WebGLRenderingContext, textureUrl: string): Promise<WebGLTexture> {
         return new Promise((resolve, reject) => {
             const texture = gl.createTexture();
@@ -162,6 +170,7 @@ export class Ring {
                 gl.bindTexture(gl.TEXTURE_2D, texture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     
+                // Check if the image dimensions are powers of two to enable mipmaps
                 const isPowerOfTwo = (value: number) => (value & (value - 1)) === 0;
                 if (isPowerOfTwo(image.width) && isPowerOfTwo(image.height)) {
                     gl.generateMipmap(gl.TEXTURE_2D);
@@ -181,20 +190,24 @@ export class Ring {
         });
     }
 
+    // Update the ring's position and rotation over time
     public update(scale: number) {
         this.orbitAngle = (this.orbitAngle + this.orbitalSpeed * scale) % (2 * Math.PI);
         this.rotationAngle = (this.rotationAngle + this.rotationSpeed * scale) % (2 * Math.PI);
     }
     
+    // Render the ring object
     render(cameraAngleX: number, cameraAngleY: number, cameraDistance: number) {
         const gl = this.gl;
         const program = this.program;
     
         gl.useProgram(program);
     
+        // Enable blending for the ring texture
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     
+        // Set up the camera perspective matrix
         const perspectiveMatrix = mat4.create();
         mat4.perspective(
             perspectiveMatrix,
@@ -214,12 +227,14 @@ export class Ring {
         mat4.lookAt(cameraMatrix, cameraPosition, new Float32Array([0, 0, 0]), new Float32Array([0, 1, 0]));
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, cameraMatrix);
         
+        // Set up the object (ring) transformation matrix
         const objectMatrix = mat4.create();
     
         mat4.rotateY(objectMatrix, objectMatrix, this.rotationAngle);
         mat4.rotateY(objectMatrix, objectMatrix, this.orbitAngle);
         mat4.translate(objectMatrix, objectMatrix, [this.x, this.y, this.z]);
     
+        // Apply additional rotations if the object is Uranus or needs info-specific transformations
         if (this.isUranus) {
             mat4.rotateZ(objectMatrix, objectMatrix, Math.PI * 98 / 180);
         }
@@ -228,19 +243,23 @@ export class Ring {
         }
         mat4.multiply(perspectiveMatrix, perspectiveMatrix, objectMatrix);
     
+        // Set up position buffer attribute
         gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
         const aPosition = gl.getAttribLocation(program, 'aPosition');
         gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(aPosition);
     
+        // Set up texture coordinate buffer attribute
         gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffer);
         const aTexCoord = gl.getAttribLocation(program, 'aTexCoord');
         gl.vertexAttribPointer(aTexCoord, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(aTexCoord);
     
+        // Pass the transformation matrix to the shader
         const uMatrix = gl.getUniformLocation(program, 'uMatrix');
         gl.uniformMatrix4fv(uMatrix, false, perspectiveMatrix);
     
+        // Bind and use the texture if it exists
         if (this.texture) {
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.texture);
@@ -248,6 +267,7 @@ export class Ring {
             gl.uniform1i(uSampler, 0);
         }
     
+        // Draw the elements
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
     }    

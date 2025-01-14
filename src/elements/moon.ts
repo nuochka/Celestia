@@ -21,9 +21,11 @@ export class Moon {
         this.rotationSpeed = rotationSpeed;
         this.isVerticalOrbit = isVerticalOrbit;
 
+        // Initialize the sphere that will represent the moon
         this.sphere = new Sphere(gl, config);
         this.sphere.loadTexture(config.textureUrl);
 
+        // Initialize the orbit field that shows the orbit path
         this.orbitField = new OrbitField(gl, {
             radius: orbitRadius,
             color: [0.68, 0.85, 0.90, 1.0],
@@ -35,6 +37,7 @@ export class Moon {
         });
     }
 
+    // Update the moon's orbit and rotation based on time
     update(deltaTime: number) {
         if (this.isVerticalOrbit) {
             // Vertical orbit
@@ -49,9 +52,11 @@ export class Moon {
         }
     }
 
+    // Render the moon, taking into account the parent's position and the camera's view
     public render(parentX: number, parentY: number, parentZ: number, cameraAngleX: number, cameraAngleY: number, cameraDistance: number): void {
         let x, y, z;
 
+        // Calculate the moon's position based on whether its orbit is vertical or horizontal
         if (this.isVerticalOrbit) {
             // Vertical orbit (X-Y plane)
             x = parentX + this.orbitRadius * Math.cos(this.angle);
@@ -64,6 +69,7 @@ export class Moon {
             z = parentZ + this.orbitRadius * Math.sin(this.angle);
         }
 
+        // Calculate the light direction vector pointing from the moon to the parent
         const lightDirection = new Float32Array([x - parentX, y - parentY, z - parentZ]);
         const length = Math.sqrt(lightDirection[0] ** 2 + lightDirection[1] ** 2 + lightDirection[2] ** 2);
         lightDirection[0] /= length;
@@ -75,10 +81,12 @@ export class Moon {
         this.orbitField.render(cameraAngleX, cameraAngleY, cameraDistance);
     }
 
+    // Set whether the moon's orbit should be vertical or horizontal
     setVerticalOrbit(isVertical: boolean) {
         this.isVerticalOrbit = isVertical;
     }
 
+    // Toggle the visibility of the moon's orbit path
     public setOrbitVisible(visible: boolean): void {
         this.orbitField.setVisible(visible);
     }
