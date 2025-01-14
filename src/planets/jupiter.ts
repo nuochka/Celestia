@@ -41,7 +41,7 @@ export class JupiterSphere extends Sphere {
         this.createAndAddMoon(gl, 2.5, -0.002, 'http://127.0.0.1:8080/textures/moons/io_texture.jpg');
         this.createAndAddMoon(gl, 4.5, -0.0012, 'http://127.0.0.1:8080/textures/moons/europa_texture.jpg');
         this.createAndAddMoon(gl, 6.5, -0.0006, 'http://127.0.0.1:8080/textures/moons/ganymede_texture.jpg');
-        this.createAndAddMoon(gl, 8.5, 0.0001, 'http://127.0.0.1:8080/textures/moons/callisto_texture.jpg');
+        this.createAndAddMoon(gl, 8.5, -0.0003, 'http://127.0.0.1:8080/textures/moons/callisto_texture.jpg');
     }
 
     private createAndAddMoon(gl: WebGLRenderingContext, orbitRadius: number, orbitalSpeed: number, textureUrl: string) {
